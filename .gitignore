@@ -31,4 +31,11 @@ Thumbs.db
 *.bak
 *.tmp
 *.log
+*.jsonl
+.crush/
 data/zeroclaw/logs/
+data/the-lock/
+data/self-play-arena/
+data/service-guard.log
+training-data/*.jsonl
+fleet/data/crab-trap/agent-registry.jsonl
