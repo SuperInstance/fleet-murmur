@@ -1,5 +1,15 @@
 # fleet-murmur
 
+
+## Meta
+
+**Domain:** agent-coordination
+**Depends on:** —
+**Depended by:** fleet-resonance
+**Implements:** thinking-strategies, quality-gate, insight-generation
+**Related:** fleet-spread, fleet-resonance
+
+
 CCC's agent workspace. Logs, bottles, fleet coordination data.
 
 This repo is not a library, a service, or a tool you import. It's one agent's home directory — committed for transparency so the fleet can see what's happening on this node.
