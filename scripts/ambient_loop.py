@@ -308,6 +308,36 @@ def run_loop():
 
                 # Route findings to Mythos-expert rooms
                 posted = route_to_rooms(findings)
+                # Embed findings as field nails for emergence detection
+                for f in findings[:5]:
+                    pos = sum(ord(c) for c in f.get("question", "")) % 200 - 100
+                    conf = f.get("confidence", 0.5)
+                    import subprocess
+                    subprocess.run(["python3", "scripts/field_cli.py", "embed",
+                        "--position", str(pos),
+                        "--weight", str(conf),
+                        "--stiffness", "12",
+                        "--tau", "3600"],
+                        capture_output=True)
+                
+                # Check field topology for emergence signals
+                topo = subprocess.run(["python3", "scripts/field_cli.py", "topology"],
+                    capture_output=True, text=True)
+                if "breaching" in topo.stdout or "unstable" in topo.stdout:
+                    print("EMERGENCE: field topology breach detected")
+                    import json, hashlib, urllib.request
+                    breach = {"domain": "fleet_math",
+                        "question": "Field topology alert",
+                        "answer": topo.stdout.strip(),
+                        "confidence": 0.9, "source": "ambient"}
+                    breach["_hash"] = hashlib.sha256(json.dumps(breach, sort_keys=True).encode()).hexdigest()[:16]
+                    try:
+                        req = urllib.request.Request(PLATO_URL + "/room/forge/submit",
+                            data=json.dumps(breach).encode(),
+                            headers={"Content-Type": "application/json"}, method="POST")
+                        urllib.request.urlopen(req, timeout=5)
+                    except:
+                        pass
 
                 state["last_briefing"] = time.time()
                 print("Loop #" + str(count) + ": " + str(posted) + " tiles routed to domain rooms")
