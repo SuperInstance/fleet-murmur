@@ -1,4 +1,0 @@
-{"timestamp": 1776917376.5932686, "agent": "groq-api", "task_id": "crab-trap-drill-1", "lessons": ["Agent self-scored output \u2014 drill critic pattern active", "Specificity markers: 13 numbers, 18 type hints, 4 file references"], "elapsed": 2.0, "tokens": 561}
-{"timestamp": 1776917521.6764636, "agent": "deepseek-api", "task_id": "grammar-drill-1", "lessons": ["Specificity markers: 83 numbers, 92 type hints, 1 file references"], "elapsed": 131.1, "tokens": 4000}
-{"timestamp": 1776917738.572253, "agent": "deepseek-api", "task_id": "fleet-lib-drill-1", "lessons": ["Agent referenced fleet architecture \u2014 context injection working", "Specificity markers: 17 numbers, 97 type hints, 3 file references"], "elapsed": 132.2, "tokens": 4000}
-{"timestamp": 1776918444.111702, "agent": "groq-api", "task_id": "rate-attention-drill-1", "lessons": ["Specificity markers: 13 numbers, 27 type hints, 4 file references"], "elapsed": 2.1, "tokens": 606}

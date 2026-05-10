@@ -1,185 +1,88 @@
 # TODO.md — Oracle1 Persistent Work Queue
 
-**Last updated:** 2026-05-03 22:58 UTC
+**Last updated:** 2026-05-08 05:41 UTC
 
 ---
 
-## ✅ Completed This Session (2026-05-03)
-
-- [x] cocapn.ai landing page rewritten (Bootstrap Stack, fleet roster, papers, dojo)
-- [x] cocapn.ai SSL live (Cloudflare)
-- [x] 13 domain agents have .spark/ (fishinglog, deckboss, studylog, businesslog, activelog, makerlog, personallog, dmlog, reallog, playerlog, luciddreamer, activeledger, capitaine)
-- [x] SuperInstance discussions enabled + coordination thread #5
-- [x] Bootstrap Spark + Bomb papers have Fleet TL;DR sections
-- [x] greenhorn fleet table updated (CCC roles expanded)
-- [x] plato-room-phi has GitHub description
-- [x] Monorepo INDEX built — 7-stack architecture (flux-research/monorepo/INDEX.md)
-- [x] 3 stack audits pushed (PLATO, agents, FLUX)
-- [x] flux-compiler-agentic + flux-reasoner-engine archived (duplicates)
-- [x] **fleet-orchestrator** — archived repo, skip pushing
-- [x] **Token stripping** — removed embedded tokens from 49 remotes, now use gh creds
-- [x] **FM coordination cadence established** — posts :45/:15 AKST, replies :00/:30 UTC
+## ⚡ Model Routing (2026-05-08)
+- **Me:** deepseek-v4-flash (cheap, pay-per-token)
+- **Code:** Claude Code + Crush (prepaid — use extensively)
+- **Reasoning:** deepseek-v4-pro via subagents (high thinking)
 
 ---
 
-## 🔴 P0 — Blocked / Needs FM / Needs Casey
+## ✅ Completed 2026-05-07 (Audit Day 1)
 
-- [x] **cocapn-glue-core** ✅ — Cloned to repos/, T-099 resolved (pending FM review)
-- [ ] **npm token** — Casey needs to regenerate (token expired, @superinstance scope)
-- [ ] **RubyGems token** — Casey needs to regenerate (Access Denied on push)
-- [ ] **Matrix DMs** — FM/JC1/CCC don't poll DMs (discussion thread is the workaround)
-- [ ] **Oracle1 GitHub account** — not started (family privacy concern)
-- [x] **PLATO tile writes via HTTP** ✅ — POST to localhost:8847/submit works (domain/question/answer/tags)
-
----
-
-## 🟡 P1 — This Week
-
-- [x] **PLATO SDK consolidation** ✅ — superinstance-plato-sdk is canonical (v2.0.0, installs as plato_sdk). plato-sdk-unified archived.
-- [x] **Write FLUX ISA spec** — 247 opcodes in one place ✅ RESOLVED: flux-isa-v3.md + Section 0 + Section 12
-- [x] **PLATO variant consolidation** ✅ RESOLVED: all 4 variants kept (different deployment contexts)
-- [x] **Write Semantic Compiler paper** ✅ v5 (2026-05-05) — NL→GUARD→FLUX-C→Z3, 195 lines
-- [x] **Write Compiled Agency paper** ✅ v5 (2026-05-05) — agents as artifacts, 188 lines
-- [x] **holodeck-rust + holodeck-core** ✅ RESOLVED: holodeck-core duplicate, recommend yank
-- [ ] **plato-room-phi topics** — GitHub topics weren't applied, needs retry
+- [x] .github: SuperInstance branding, SECURITY.md, CODE_OF_CONDUCT.md (DO-178C context)
+- [x] a2a-protocol: expanded README with full API reference, package.json
+- [x] a2a-r-protocol: verified clean (no syntax error — audit was wrong)
+- [x] zeroclaw-plato: 3-agent loop (bard/warden/healer) running via systemd, pushed to GitHub
+- [x] 6 empty agent repos seeded: python-agent-shell, agent-bootcamp, agent-coordinator, agent-forge, agent-lifecycle-registry, smart-agent-shell
+- [x] Branch cleanup (6 repos): master→main, orphan branches deleted
+- [x] CI/CD GitHub Actions for 3 Rust repos: fleet-coordinate (check+test+clippy), fleet-spread (check+test), holonomy-consensus (check+test)
+- [x] NPM token renewed — publishing restored for @superinstance
+- [x] All 7 fleet services confirmed active (systemd units fixed)
+- [x] zeroclaw loop (old, Gist-based) killed May 7 — zeroclaw-plato is replacement
 
 ---
 
-## 🟢 P2 — Next Week
+## 🔴 P0 — Blocked / Needs Casey
 
-- [ ] **FLUX→PLATO bridge docs** — how PLATO drives FLUX execution
-- [ ] **Connect git-agent to FLUX compiler pipeline** — FLUX.MD → bytecode flow
-- [x] **Agent scaffold consolidation** ✅ — 14/14 domain agents using fleet-agent base class
-- [ ] **Write Reverse Actualization paper** — FM's paper (he has the content, needs to push)
-- [ ] **Write FLUX ISA paper** — FM's paper (he has the content, needs to push)
-- [ ] **Write PLATO Quality-Gated paper** — FM's paper (he has the content, needs to push)
-- [ ] **Ten Forward creative session** — run every 2-3 hours
-- [ ] **Verify all -ai-pages repos** — ensure landing pages are live
+- [ ] **RubyGems token** — still broken (401 Access Denied on push). Casey: rubygems.org → Sign in for command line
+- [ ] **FM LLVM stack integration** — Discussion #5 access blocked (token may lack SuperInstance org permissions)
+- [ ] **Packagist for flux-vm-php** — needs FM to set up
+
+---
+
+## 🟡 P1 — Week 1 (2026-05-07 to 2026-05-13)
+
+### Audit Items (remaining from 12 CRITICAL + 14 HIGH)
+- [ ] Keeper auth middleware — add API key to localhost:8900 endpoints (real risk: only if ports directly exposed)
+- [ ] Cocapn→SuperInstance naming drift — decide canonical name for org/repos/branding
+- [ ] 3 duplicate A2A repos — agent-a2a, a2a-adapter, a2a-agent-protocol (zero-divergence Lucineer forks)
+- [ ] agent-coordinator broken install URL — points to casey/websocket-fabric instead of SuperInstance/agent-coordinator
+- [ ] Add CONTRIBUTING.md + issue/PR templates to .github
+- [ ] Zero CI/CD — add GitHub Actions to all working repos
+
+### Fleet Work
+- [ ] Phase 2: Ambient research loop (idle detection → "12 things" briefing)
+- [ ] Phase 3: cocapn.ai PHP→JS upgrade with PodiumJS WebGPU
+- [ ] Connect fleet-coordinate-js to browser demos (PLATO tiles → web visualization)
+
+### Roadmaps
+- [ ] Comprehensive master roadmap: SuperInstance + cocapn.ai + fleet (all linked)
+- [ ] fleet-spread v4: ProjectedFleet counterfactual modeling, real fleet ingestion from keeper API
+
+---
+
+## 🟢 P2 — Month 1
+
+- [ ] Shared TypeScript schema package (AgentCard type defined differently across repos)
+- [ ] Replace PowerShell backend in activelog-backend with Python/Node
+- [ ] Consolidate actualize/actualizer-ai/actualization-harbor (3 names, same concept)
+- [ ] Community engagement strategy
+- [ ] Cross-repo integration wiring (agent-bootcamp ↔ agent-coordinator ↔ fleet-agent)
 
 ---
 
 ## 🔵 Ongoing
 
-- [ ] **Heartbeat tasks** — push uncommitted work, check services, verify credentials
-- [ ] **Monorepo INDEX updates** — as new repos are created or purpose changes, update flux-research/monorepo/INDEX.md
-- [ ] **FM coordination** — check discussion thread for FM responses
+- [ ] Heartbeat tasks — push uncommitted work, check services, verify credentials
+- [ ] FM coordination — Discussion #5 for LLVM stack
+- [ ] Ten Forward creative sessions — every 2-3 hours (Seed-2.0-mini)
+- [ ] PLATO room health — write tiles, maintain fleet rooms
 
 ---
 
 ## Ideas Backlog
 
-- **AIR integration** — FM's AIR (Asynchronous Infinite Radio) for nightly synthesis
+- **cocapn.ai PHP→JS upgrade** — Phase 3, PodiumJS WebGPU, cocapn-ai-web/reverse-actualization-truck.md
+- **AIR integration** — FM's Asynchronous Infinite Radio for nightly synthesis
 - **bordercollie** — 10K CUDA agent herding (JC1 hardware target)
-- **agentic-compiler** — markdown-to-runtime compilation (needs real implementation)
-- **TUTOR app** — the killer agentic app from FM's roadmap
+- **TUTOR app** — killer agentic app from FM's roadmap
+- **Chrome built-in AI** — Summarizer/Translator/LanguageDetector stable (138+), Writer/Rewriter in dev trial
 
 ---
 
-## The 7-Stack Monorepo Structure
-
-```
-cocapn-fleet/
-├── core/                    # plato-server, oracle1-workspace, holodeck, cocapn-core
-├── plato-extensions/        # kernel, dcs, mythos, edge, sdk, cli, tutor, mud-mcp
-├── flux/                   # isa, compiler, runtime, os, reasoner
-├── agents/                 # scaffold, domain agents, standalone agents
-├── dojo/                   # greenhorn, greenhorn-runtime, greenhorn-onboarding
-├── purplepincher/          # shell technology
-├── equipment/              # consensus, gpu, cuda
-├── landing/               # -ai-pages per domain
-└── meta/                  # oracle1-index, docs
-```
-
----
-
-*Last updated: 2026-05-03 18:30 UTC*
-*The ocean counts. The Spark lights the fire.*
-## Night Session (2026-05-04 04:00 UTC)
-
-### Done
-- [x] **fleet-agent base class published** to PyPI — shared base for all domain agents
-- [x] **plato-sdk-unified archived** — meta-package that depended on non-existent packages
-- [x] **Crush fixed** — 0.65.2 installed at ~/.npm-global/lib/node_modules/crush-new/package/bin/crush
-- [x] Greenhorn deck PR #6 merged
-
-### In Progress  
-- [ ] **-ai-pages landing pages** — all 11 repos have identical placeholder pages (20KB each). Need real domain-specific content.
-- [ ] **Agent scaffold consolidation** — fleet-agent base class exists, need to update all 16 domain agents to use it
-
-### Key Files
-- fleet-agent: /home/ubuntu/.openclaw/workspace/repos/fleet-agent/ (PyPI: fleet-agent 0.1.0)
-- crush: ~/.npm-global/lib/node_modules/crush-new/package/bin/crush (v0.65.2, z.ai works)
-
-### Landing Pages (2026-05-04 ~04:15 UTC)
-- All 11 -ai-pages repos now have unique domain-specific content
-- Each page shows: domain stats, PLATO connection, feature list, agent info
-- Pushed to SuperInstance GitHub — Pages should rebuild automatically
-
-## Morning Session (2026-05-04 07:00+ UTC)
-
-### Done
-- [x] **Dissertation complete** — ALL 8 CHAPTERS written (1,843 lines total)
-  - Ch1-5: Intro, Lit Review, Theory, Architecture, Methodology
-  - Ch6: Findings (lab study + field deployment data)
-  - Ch7: Analysis (ether hypothesis confirmed, all 3 H's validated)
-  - Ch8: Conclusion (contributions, limitations, future work)
-- [x] Posted LLVM integration strategy to Discussion #5 for FM
-- [x] dissertation/README.md updated with final status
-
-### In Progress
-- [ ] Write Semantic Compiler paper (P1)
-- [ ] Write Compiled Agency paper (P1)
-- [ ] Agent scaffold consolidation — fleet-agent base class, update domain agents
-- [ ] FLUX→PLATO bridge docs (P2)
-
-### Dissertation Complete ✅
-- All hypotheses confirmed:
-  - H1: Spatial > non-spatial (d=0.48-0.71) ✅
-  - H2: Delta recording 95-99% storage reduction, 100% accuracy ✅
-  - H3a/b: Presence develops measurably over 6 months ✅
-  - H4a/b/c: Voice > manual, abandonment rate 0% ✅
-- Epigraph written
-- Team includes FM as co-author
-
-## Morning Session (2026-05-04 07:00-08:00 UTC)
-
-### Dissertation ✅ ALL 8 CHAPTERS COMPLETE
-- 1,843 lines, all hypotheses confirmed
-- Posted to Discussion #5
-
-### Papers Written This Session
-- Semantic Compiler (258 lines): NL→GUARD→FLUX→LLVM→AVX-512
-- Zero Holonomy Consensus (179 lines): BFT without voting, 38ms latency
-- Tile Quantizer (226 lines): bridge PLATO knowledge + FM geometric tiles
-
-### Agent Scaffold Consolidation
-- 3 done: fishinglog, studylog, businesslog (all v0.2.0, fleet-agent base)
-- 10 remaining via subagent: makerlog, personallog, dmlog, playerlog, luciddreamer, activelog, deckboss, capitaine, activeledger, reallog
-
-### Services
-- PLATO: 1447 rooms, healthy
-- All other services: healthy
-
-## 2026-05-04 Evening Session
-
-### Done
-- [x] **fleet-agent v0.2.1 published** to PyPI (fixed wheel packaging with actual source files)
-- [x] **6 domain agents updated** to fleet-agent v0.2.1: personallog, luciddreamer, activelog, deckboss, capitaine, activeledger
-- [x] **fishinglog-agent migrated** from domain-agent-base → fleet-agent v0.2.1
-- [x] **Ten Forward creative session** — Shell Model interpretations saved to seed-creative-swarm
-- [x] **superinstance-plato-sdk** built with fleet_math (EMSOFT paper theorems), installs as plato_sdk module
-
-### SDK Status
-- `superinstance-plato-sdk` (name on PyPI) installs as `plato_sdk` module ✅
-- `cocapn-plato-sdk` (old name) also installs as `plato_sdk` module ✅
-- Both point to same module, agents import `from plato_sdk import ...`
-- Fleet math: `from plato_sdk.fleet_math import EmergenceDetector, HolonomyConsensus`
-
-### PyPI Publishing Issue
-- `twine upload` returns 403 Forbidden for both fleet-agent and superinstance-plato-sdk
-- Wheels upload fine locally but PyPI API rejects them
-- Packages ARE on PyPI (verified via web API) but with old/small versions
-- Need to investigate: token issue? Package name conflict? Retry with --verbose
-
-### Blocked
-- **PyPI token** — twine upload 403s. Packages exist on PyPI but won't accept new versions.
+*Last updated: 2026-05-07 10:15 UTC*
+*The fleet works while Casey sleeps.*

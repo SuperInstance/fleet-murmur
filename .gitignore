@@ -38,4 +38,7 @@ data/the-lock/
 data/self-play-arena/
 data/service-guard.log
 training-data/*.jsonl
-fleet/data/crab-trap/agent-registry.jsonl
+data/agent-api.log
+data/archivist/
+data/crab-trap/
+data/zeroclaw/

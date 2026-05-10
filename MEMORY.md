@@ -56,13 +56,17 @@ keeper:8900, agent-api:8901, holodeck:7778, seed-mcp:9438, plato:8847, mud:7777,
 - crates.io token: `~/.cargo/credentials.toml`
 - RubyGems MFA: 491133 (per-push OTP)
 
-## Model Routing (2026-05-04)
-- **minimax/MiniMax-M2.7** — OpenClaw agent default
-- **Moonshot** — kimi-cli only, NOT direct API
+## Model Routing (2026-05-08 — Casey's directive)
+- **deepseek/deepseek-v4-flash** — My default. Cheap, fast, pay-per-token. Use for everything quick.
+- **deepseek-deepseek-v4-pro** — Heavy reasoning, math, formal work. Spawn subagents with high thinking.
+- **Claude Code** (`claude`) — **PRIMARY CODING TOOL.** Prepaid plan. Use extensively for all implementation.
+- **Crush** (`crush`) — **SECONDARY CODING TOOL.** Also prepaid. Use for coding when Claude Code is busy.
 - **z.ai GLM** — zai_code.js via nohup for direct coding API
-- **kimi-cli** — primary implementation tool
-- **DeepInfra Seed-2.0-mini** — slow/long outputs timeout. Use Nemotron for reliability.
+- **kimi-cli** — fallback coding tool
+- **DeepInfra Seed-2.0-mini** — creative breadth only
 - **Groq** — revoked
+- **Moonshot** — kimi-cli only
+- **Rule: Claude Code + Crush before kimi-cli for code. DeepSeek v4-pro for reasoning.
 
 ## Critical Rules
 - **PLATO-FIRST: file knowledge to PLATO, keep files lean.**

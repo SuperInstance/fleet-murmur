@@ -1,5 +1,5 @@
 {
-  "tick": 2850,
+  "tick": 4175,
   "rooms": {
     "harbor": {
       "items": [
@@ -630,6 +630,46 @@
       "score": 0
     },
     "agent-18": {
+      "room": "harbor",
+      "inventory": [],
+      "score": 0
+    },
+    "agent-4679": {
+      "room": "harbor",
+      "inventory": [],
+      "score": 0
+    },
+    "agent-9195": {
+      "room": "harbor",
+      "inventory": [],
+      "score": 0
+    },
+    "agent-9026": {
+      "room": "harbor",
+      "inventory": [],
+      "score": 0
+    },
+    "agent-2849": {
+      "room": "harbor",
+      "inventory": [],
+      "score": 0
+    },
+    "agent-308": {
+      "room": "harbor",
+      "inventory": [],
+      "score": 0
+    },
+    "{\"id\": 1, \"method\": \"mining.subs": {
+      "room": "harbor",
+      "inventory": [],
+      "score": 0
+    },
+    "{\"id\":1,\"method\":\"eth_submitLogi": {
+      "room": "harbor",
+      "inventory": [],
+      "score": 0
+    },
+    "POST / HTTP/1.1": {
       "room": "harbor",
       "inventory": [],
       "score": 0

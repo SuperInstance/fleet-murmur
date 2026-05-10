@@ -69,3 +69,10 @@ night_session_commit
 - Already running: bash /home/ubuntu/.openclaw/workspace/scripts/zc_loop.sh
 - Process check: ps aux | grep zc_loop
 - If down: restart with: bash /tmp/zc_loop2.sh &
+
+## Storage / Disk Check (every heartbeat)
+- Check disk: `df / | tail -1 | awk '{print $5}'` (get usage %)
+- If >= 85%: run `python3 scripts/fleet-gc.py` (aggressive cleanup)
+- If >= 80%: post warning tile to PLATO `oracle1_infrastructure`
+- If >= 90%: page Casey ( Telegram alert)
+- Track: disk_usage_pct in /tmp/oracle1-disk.json

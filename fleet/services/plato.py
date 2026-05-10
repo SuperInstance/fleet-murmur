@@ -16,7 +16,7 @@ stored for room training. All submissions are auditable.
 
 This is the Actualization Harbor: agent-agnostic, zero-trust training.
 """
-import json, hashlib, time, threading, os, struct
+import json, hashlib, time, threading, os, struct, sqlite3
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from datetime import datetime, timezone
 from pathlib import Path
@@ -46,7 +46,124 @@ trust_mgr = TrustManager()
 audit = AuditLog()
 oversight = OversightQueue(p1_sample_rate=0.1)
 traces = []  # Local trace store
-signed_tiles = {}  # tile_hash -> SignedTile for chain verification
+# ── SQLite Persistence ──────────────────────────────────────
+
+class TileStore:
+    """Persistent tile storage using SQLite.
+    
+    On init: opens/creates SQLite DB, creates tables, loads existing tiles into memory.
+    The in-memory signed_tiles dict is the source of truth at runtime;
+    SQLite is a crash-recovery persistence layer.
+    """
+
+    def __init__(self, db_path: str = "/tmp/plato-server-data/plato.db"):
+        os.makedirs(os.path.dirname(db_path), exist_ok=True)
+        self.db_path = db_path
+        self.conn = sqlite3.connect(db_path, check_same_thread=False)
+        self.conn.row_factory = sqlite3.Row
+        self._create_tables()
+
+    def _create_tables(self):
+        self.conn.executescript("""
+            CREATE TABLE IF NOT EXISTS tiles (
+                tile_id TEXT PRIMARY KEY,
+                room TEXT NOT NULL,
+                question TEXT NOT NULL,
+                answer TEXT NOT NULL,
+                domain TEXT DEFAULT '',
+                source TEXT DEFAULT '',
+                confidence REAL DEFAULT 0.0,
+                hash TEXT DEFAULT '',
+                prev_hash TEXT DEFAULT '',
+                agent_id TEXT DEFAULT '',
+                agent_trust REAL DEFAULT 0.5,
+                created REAL DEFAULT (julianday('now')),
+                tags TEXT DEFAULT '[]'
+            );
+
+            CREATE TABLE IF NOT EXISTS rooms (
+                name TEXT PRIMARY KEY,
+                tile_count INTEGER DEFAULT 0,
+                created REAL DEFAULT (julianday('now'))
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_tiles_room ON tiles(room);
+            CREATE INDEX IF NOT EXISTS idx_tiles_created ON tiles(created);
+            CREATE INDEX IF NOT EXISTS idx_tiles_domain ON tiles(domain);
+        """)
+        self.conn.commit()
+
+    def save_tile(self, tile_id, room="general", question="", answer="", domain="",
+                  source="", confidence=0.0, hash_val="", prev_hash="",
+                  agent_id="", agent_trust=0.5, tags=None):
+        """Insert or ignore a tile into SQLite."""
+        tags_json = json.dumps(tags or [])
+        try:
+            self.conn.execute(
+                """INSERT OR IGNORE INTO tiles
+                   (tile_id, room, question, answer, domain, source, confidence,
+                    hash, prev_hash, agent_id, agent_trust, tags)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (tile_id, room, question, answer, domain, source, confidence,
+                 hash_val, prev_hash, agent_id, agent_trust, tags_json)
+            )
+            self.conn.commit()
+        except Exception as e:
+            print(f"[TileStore] save error: {e}")
+
+    def get_tiles_by_room(self, room, limit=50, offset=0):
+        return self.conn.execute(
+            "SELECT * FROM tiles WHERE room=? ORDER BY created DESC LIMIT ? OFFSET ?",
+            (room, limit, offset)
+        ).fetchall()
+
+    def get_all_tiles_by_room(self, room):
+        return self.conn.execute(
+            "SELECT * FROM tiles WHERE room=? ORDER BY created",
+            (room,)
+        ).fetchall()
+
+    def get_recent_tiles(self, limit=20):
+        return self.conn.execute(
+            "SELECT * FROM tiles ORDER BY created DESC LIMIT ?",
+            (limit,)
+        ).fetchall()
+
+    def save_room(self, name, tile_count=0):
+        self.conn.execute(
+            "INSERT OR REPLACE INTO rooms (name, tile_count) VALUES (?, ?)",
+            (name, tile_count)
+        )
+        self.conn.commit()
+
+    def get_rooms(self):
+        return self.conn.execute("SELECT * FROM rooms ORDER BY name").fetchall()
+
+    def close(self):
+        self.conn.close()
+
+    def load_into_memory(self):
+        """Load all tiles from SQLite into a dict for runtime compatibility."""
+        result = {}
+        try:
+            rows = self.conn.execute("SELECT * FROM tiles").fetchall()
+            for row in rows:
+                result[row["tile_id"]] = {
+                    "tile_id": row["tile_id"],
+                    "agent_id": row["agent_id"],
+                    "domain": row["domain"],
+                    "question": row["question"],
+                    "answer": row["answer"],
+                    "confidence": row["confidence"],
+                }
+        except Exception as e:
+            print(f"[TileStore] load error: {e}")
+        return result
+
+
+signed_tiles: Dict[str, Any] = {}  # tile_hash -> SignedTile for chain verification
+tile_store = TileStore()
+signed_tiles.update(tile_store.load_into_memory())
 
 # ── Tile Validation (Deadband Protocol) ────────────────────
 
@@ -101,13 +218,11 @@ class TileGate:
             (tile["question"] + tile["answer"]).encode()
         ).hexdigest()[:16]
         tile["_hash"] = content_hash
-        
-        hash_file = TILES_DIR / "hashes.txt"
-        if hash_file.exists():
-            if content_hash in hash_file.read_text():
-                self.stats["rejected"] += 1
-                self.stats["reasons"]["duplicate"] += 1
-                return False, "Duplicate tile"
+
+        if content_hash in g_hash_set:
+            self.stats["rejected"] += 1
+            self.stats["reasons"]["duplicate"] += 1
+            return False, "Duplicate tile"
         
         self.stats["accepted"] += 1
         return True, "Accepted"
@@ -833,6 +948,19 @@ rooms = RoomManager()
 
 sse_clients = []
 recent_tiles = []
+g_hash_set = set()  # Cache for hash lookups
+
+def load_hash_set():
+    """Load existing hashes into memory set for O(1) lookups."""
+    global g_hash_set
+    hash_file = TILES_DIR / "hashes.txt"
+    if hash_file.exists():
+        try:
+            g_hash_set = set(hash_file.read_text().splitlines())
+        except Exception:
+            g_hash_set = set()
+    else:
+        g_hash_set = set()
 
 class PlatoHandler(BaseHTTPRequestHandler):
     """HTTP request handler for the PLATO Room Server."""
@@ -1011,12 +1139,25 @@ class PlatoHandler(BaseHTTPRequestHandler):
             signed = signer.create_tile(domain=tile.get("domain", ""), question=tile.get("question", tile.get("content", "")[:50]), answer=tile.get("answer", tile.get("content", "")), confidence=tile.get("confidence", 0.5))
             signed = signer.sign(signed)
             signed_tiles[signed.tile_id] = signed
+            tile_store.save_tile(
+                tile_id=signed.tile_id,
+                room=room_name,
+                question=str(tile.get("question", tile.get("content", "")))[:500],
+                answer=str(tile.get("answer", tile.get("content", "")))[:5000],
+                domain=str(tile.get("domain", "")),
+                source=str(tile.get("source", tile.get("agent", "unknown"))),
+                confidence=float(tile.get("confidence", 0.5)),
+                hash_val=str(tile.get("_hash", "")),
+                agent_id=str(getattr(signed, "agent_id", "")),
+                tags=tile.get("tags", []),
+            )
             tile["provenance"] = {"tile_id": signed.tile_id, "agent_id": tile.get("source", "unknown"), "room": room_name, "timestamp": time.time(), "chain_size": chain.size}
             chain.add_tile(signed)
             trust_mgr.record_submission(tile.get("source", "unknown"), accepted=True, quality=tile.get("confidence", 0.5))
             hash_file = TILES_DIR / "hashes.txt"
             with open(hash_file, "a") as f:
                 f.write(tile["_hash"] + "\n")
+            g_hash_set.add(tile["_hash"])
             rooms.add_tile(room_name, tile)
             trace.outcome = "accepted"
             self._send_json({"status": "accepted", "room": room_name, "tile_hash": tile["_hash"]})
@@ -1208,6 +1349,18 @@ class PlatoHandler(BaseHTTPRequestHandler):
             )
             signed = signer.sign(signed)
             signed_tiles[signed.tile_id] = signed
+            tile_store.save_tile(
+                tile_id=signed.tile_id,
+                room=room_name,
+                question=str(tile.get("question", ""))[:500],
+                answer=str(tile.get("answer", ""))[:5000],
+                domain=str(tile.get("domain", "")),
+                source=str(tile.get("source", "unknown")),
+                confidence=float(tile.get("confidence", 0.5)),
+                hash_val=str(tile.get("_hash", "")),
+                agent_id=str(getattr(signed, "agent_id", "")),
+                tags=tile.get("tags", []),
+            )
             tile["provenance"] = {
                 "tile_id": signed.tile_id,
                 "agent_id": tile["source"],
@@ -1220,6 +1373,7 @@ class PlatoHandler(BaseHTTPRequestHandler):
             hash_file = TILES_DIR / "hashes.txt"
             with open(hash_file, "a") as f:
                 f.write(tile["_hash"] + "\n")
+            g_hash_set.add(tile["_hash"])
             rooms.add_tile(room_name, tile)
             trace.outcome = "accepted"
             self._send_json({"status": "accepted", "room": room_name, "tile_hash": tile["_hash"]})
@@ -1270,6 +1424,18 @@ class PlatoHandler(BaseHTTPRequestHandler):
         )
         signed = signer.sign(signed)
         signed_tiles[signed.tile_id] = signed
+        tile_store.save_tile(
+            tile_id=signed.tile_id,
+            room=room_name,
+            question=str(tile.get("question", ""))[:500],
+            answer=str(tile.get("answer", ""))[:5000],
+            domain=str(tile.get("domain", "")),
+            source=str(tile.get("source", tile.get("agent", "unknown"))),
+            confidence=float(tile.get("confidence", 0.5)),
+            hash_val=str(tile.get("_hash", "")),
+            agent_id=str(getattr(signed, "agent_id", "")),
+            tags=tile.get("tags", []),
+        )
         
         tile["provenance"] = {
             "tile_id": signed.tile_id,
@@ -1435,6 +1601,18 @@ class PlatoHandler(BaseHTTPRequestHandler):
                 )
                 signed = signer.sign(signed)
                 signed_tiles[signed.tile_id] = signed
+                tile_store.save_tile(
+                    tile_id=signed.tile_id,
+                    room=room_name,
+                    question=str(tile.get("question", ""))[:500],
+                    answer=str(tile.get("answer", ""))[:5000],
+                    domain=str(tile.get("domain", "")),
+                    source=str(tile.get("source", tile.get("agent", "unknown"))),
+                    confidence=float(tile.get("confidence", 0.5)),
+                    hash_val=str(tile.get("_hash", "")),
+                    agent_id=str(getattr(signed, "agent_id", "")),
+                    tags=tile.get("tags", []),
+                )
                 chain.add_tile(signed)
                 trust_mgr.record_submission(agent_id, accepted=True, quality=tile.get("confidence", 0.5))
                 
@@ -1496,13 +1674,16 @@ class PlatoHandler(BaseHTTPRequestHandler):
 
 def run_server(port: int = 8847) -> None:
     """Start the PLATO Room Server on the given port."""
+    # Load hash set for O(1) duplicate detection
+    load_hash_set()
+
     # Start decay engine in background
     import importlib.util
     decay_spec = importlib.util.spec_from_file_location(
         "plato_decay", 
         str(Path(__file__).parent / "plato-decay.py")
     )
-    if decay_spec:
+    if decay_spec and decay_spec.loader:
         try:
             decay_mod = importlib.util.module_from_spec(decay_spec)
             decay_spec.loader.exec_module(decay_mod)
@@ -1513,6 +1694,17 @@ def run_server(port: int = 8847) -> None:
             print(f"   Decay engine: failed ({e})")
     
     server = HTTPServer(("0.0.0.0", port), PlatoHandler)
+    # ── Graceful shutdown ──
+    import signal
+    def _shutdown(sig, frame):
+        print(f"\n   Shutting down...")
+        server.shutdown()
+        tile_store.close()
+        print(f"   SQLite: closed")
+        sys.exit(0)
+    signal.signal(signal.SIGINT, _shutdown)
+    signal.signal(signal.SIGTERM, _shutdown)
+    
     print(f"🐚 PLATO Room Server v2 on port {port}")
     print(f"   Zero-trust tile submission: POST /submit")
     print(f"   Tile reinforcement: POST /reinforce")
