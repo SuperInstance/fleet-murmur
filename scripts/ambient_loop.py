@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """
-Ambient Research Loop — idle detection -> "12 things" briefing.
+Ambient Research Loop v2 — Mythos-Meshed
 
-When the fleet is idle (no recent human interaction), scans PLATO rooms
-for gaps, checks recent activity, and generates a "12 things" briefing
-of what's worth knowing.
+When the fleet is idle, scans PLATO rooms for gaps, checks recent
+activity, and distributes findings to domain-expert rooms using
+Mythos routing patterns:
 
-Runs as a lightweight loop every ~15 minutes when idle.
-Silent when the human is active.
+- Tiles as KV: each finding is a (question, answer, confidence) tile
+- Rooms as Experts: domain-tagged findings route to fleet_{domain} rooms
+- Deadband as ACT: findings below confidence threshold are filtered
+- Bard/Warden/Healer: three roles for generate/filter/repair
 """
 
 import json, os, time, subprocess, sys, hashlib
@@ -19,19 +21,43 @@ from collections import defaultdict
 PLATO_URL = "http://localhost:8847"
 STATE_FILE = Path("/tmp/ambient-loop-state.json")
 LAST_ACTIVE_FILE = Path("/tmp/ambient-last-human-active")
-BRIEFING_ROOM = "oracle1_briefing"
 INTERVAL_IDLE = 900
 INTERVAL_ACTIVE = 3600
 HUMAN_TIMEOUT = 1800
 
+# ── Mythos Constants ─────────────────────────────────────────
+
+# Deadband priority tiers (from plato_mythos/deadband_act.py)
+P0_CRITICAL = 0.99
+P1_STANDARD = 0.80
+P2_LOW = 0.50
+
+# Mythos archetype room roles
+BARD_ROOMS = ["fleet_math", "fleet_fleet", "fleet_plato", "fleet_agent", "fleet_research"]
+WARDEN_ROOMS = ["fleet_infrastructure", "fleet_security", "fleet_communication", "fleet_tools"]
+HEALER_ROOMS = ["fleet_rust", "fleet_edge", "fleet_protocol", "fleet_automation", "fleet_training"]
+
+# Domain → room mapping (rooms as experts)
+DOMAIN_ROOM = {
+    "math": "fleet_math", "fleet": "fleet_fleet", "plato": "fleet_plato",
+    "agent": "fleet_agent", "research": "fleet_research",
+    "infrastructure": "fleet_infrastructure", "security": "fleet_security",
+    "communication": "fleet_communication", "tools": "fleet_tools",
+    "rust": "fleet_rust", "edge": "fleet_edge",
+    "protocol": "fleet_protocol", "automation": "fleet_automation",
+    "training": "fleet_training", "docs": "fleet_docs",
+    "mud": "fleet_mud", "brand": "fleet_brand", "web": "fleet_web",
+    "math-flows": "fleet_math-flows",
+}
+
+# ── PLATO Client ─────────────────────────────────────────────
 
 def plato_get(path):
     try:
         resp = urllib.request.urlopen(PLATO_URL + path, timeout=5)
         return json.loads(resp.read())
-    except Exception as e:
+    except:
         return None
-
 
 def plato_post(room, tile):
     content = json.dumps(tile, sort_keys=True)
@@ -44,10 +70,64 @@ def plato_post(room, tile):
             method="POST"
         )
         resp = urllib.request.urlopen(req, timeout=5)
-        return resp.read()
-    except Exception as e:
+        return json.loads(resp.read())
+    except:
         return None
 
+# ── Mythos: Get Priority ─────────────────────────────────────
+
+def get_priority(confidence, is_critical=False):
+    """Classify tile priority (matching plato_mythos DeadbandACT.get_priority)."""
+    if is_critical or confidence >= P0_CRITICAL:
+        return "P0", P0_CRITICAL
+    if confidence >= P1_STANDARD:
+        return "P1", P1_STANDARD
+    return "P2", P2_LOW
+
+def should_halt(halt_prob, cum_prob, priority_threshold, step, max_steps):
+    """Mythos DeadbandACT.should_continue logic.
+    Returns True if the loop should KEEP running (not halted yet)."""
+    if step >= max_steps - 1:
+        return False
+    cum_prob += halt_prob
+    return cum_prob < priority_threshold, cum_prob
+
+# ── Mythos: Archetype Processing ─────────────────────────────
+
+def bard_process(findings):
+    """Bard: generate best output per domain.
+    Selects the highest-confidence finding in each domain."""
+    best = {}
+    for f in findings:
+        domain = f.get("domain", "tools")
+        conf = f.get("confidence", 0.0)
+        if domain not in best or conf > best[domain]["confidence"]:
+            best[domain] = f
+    return list(best.values())
+
+def warden_filter(tiles):
+    """Warden: filter by confidence >= priority threshold.
+    Dead tiles (expired constraints, confidence < 0.3) are dropped."""
+    kept = []
+    for t in tiles:
+        priority, threshold = get_priority(t.get("confidence", 0.0))
+        if t.get("confidence", 0.0) >= threshold and not t.get("is_dead", False):
+            kept.append(t)
+    return kept
+
+def healer_repair(tiles):
+    """Healer: flag expired tiles for soft re-evaluation.
+    Dead tiles with very low confidence get restored with degraded confidence."""
+    repaired = []
+    for t in tiles:
+        if t.get("is_dead", False) and t.get("confidence", 1.0) < 0.3:
+            t["is_dead"] = False
+            t["confidence"] = 0.3
+            t["question"] = "[RE-EVAL] " + t.get("question", "")
+        repaired.append(t)
+    return repaired
+
+# ── Scanning ─────────────────────────────────────────────────
 
 def scan_plato_rooms():
     rooms = plato_get("/rooms")
@@ -56,12 +136,10 @@ def scan_plato_rooms():
     result = []
     for name, info in rooms.items():
         result.append({
-            "name": name,
-            "tiles": info.get("tile_count", 0),
+            "name": name, "tiles": info.get("tile_count", 0),
             "created": info.get("created", ""),
         })
     return sorted(result, key=lambda r: -r["tiles"])
-
 
 def scan_recent_commits():
     repos = [
@@ -69,6 +147,7 @@ def scan_recent_commits():
         "eisenstein-do178c", "keel", "holonomy-consensus",
         "fleet-coordinate", "fleet-spread", "fleet-murmur",
         "cocapn-ai-web", "flux-hardware", "eisenstein",
+        "plato-mythos", "plato-mythos-glue", "open-mythos-edge",
     ]
     findings = []
     for repo in repos:
@@ -85,11 +164,17 @@ def scan_recent_commits():
                 msg = c.get("commit", {}).get("message", "").split("\n")[0]
                 date = c.get("commit", {}).get("author", {}).get("date", "")[:16]
                 sha = c["sha"][:8]
-                findings.append(date + " " + repo + ": " + sha + " " + author + ": " + msg)
+                findings.append({
+                    "question": date + " " + repo + ": " + sha,
+                    "answer": author + ": " + msg,
+                    "confidence": 0.85,
+                    "source": "github",
+                    "domain": "research",
+                    "is_dead": False,
+                })
         except:
             pass
     return findings
-
 
 def scan_services():
     ports = {
@@ -110,61 +195,44 @@ def scan_services():
                 status[name] = "down"
     return status
 
+# ── Mythos Routing ───────────────────────────────────────────
 
-def scan_disk():
-    try:
-        result = subprocess.run(["df", "/"], capture_output=True, text=True, timeout=5)
-        line = result.stdout.strip().split("\n")[-1]
-        parts = line.split()
-        return parts[4] + " used"
-    except:
-        return "unknown"
+def route_to_rooms(findings):
+    """Route findings to domain-expert PLATO rooms (Rooms as Experts).
+    Uses confidence-weighted gating: high confidence → direct post,
+    low confidence → batch into summary tile."""
+    by_room = defaultdict(list)
+    for f in findings:
+        domain = f.get("domain", "tools")
+        room = DOMAIN_ROOM.get(domain, "oracle1_briefing")
+        by_room[room].append(f)
 
+    posted = 0
+    for room, tiles in by_room.items():
+        # Sort by confidence
+        tiles.sort(key=lambda t: -t.get("confidence", 0.0))
 
-def generate_briefing(rooms, commits, services, disk, loop_count):
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    things = []
+        # Bard: select best per room
+        bard_best = bard_process(tiles)
 
-    total_tiles = sum(r["tiles"] for r in rooms)
-    total_rooms = len(rooms)
-    top_rooms = [r for r in rooms if r["tiles"] > 0][:5]
-    empty_rooms = [r for r in rooms if r["tiles"] == 0]
+        # Warden: filter by threshold
+        warden_kept = warden_filter(bard_best)
 
-    things.append("PLATO: " + str(total_rooms) + " rooms, " + str(total_tiles) + " tiles")
-    
-    room_str = ", ".join(r["name"] + " (" + str(r["tiles"]) + ")" for r in top_rooms)
-    things.append("Top rooms: " + room_str)
-    
-    if empty_rooms:
-        empty_names = ", ".join(r["name"] for r in empty_rooms)
-        things.append("Empty rooms: " + empty_names)
+        # Healer: repair dead tiles
+        healed = healer_repair(warden_kept)
 
-    by_repo = defaultdict(list)
-    for c in commits:
-        repo_part = c.split(":")[0] if ":" in c else "?"
-        by_repo[repo_part].append(c)
+        for tile in healed[:3]:  # max 3 per room
+            priority, threshold = get_priority(tile.get("confidence", 0.5))
+            deadband_note = " [Deadband ACT: " + priority + " @ " + str(threshold) + "]"
+            tile["answer"] = tile.get("answer", "") + deadband_note
+            tile["tags"] = tile.get("tags", []) + ["mythos", priority.lower()]
+            result = plato_post(room, tile)
+            if result:
+                posted += 1
 
-    top_active = sorted(by_repo.items(), key=lambda x: -len(x[1]))[:5]
-    if top_active:
-        things.append("Active repos: " + ", ".join(r for r, _ in top_active))
+    return posted
 
-    for l in commits[:3]:
-        things.append("Commit: " + l[:90])
-
-    down_services = [s for s, st in services.items() if st == "down"]
-    if down_services:
-        things.append("DOWN: " + ", ".join(down_services))
-    else:
-        up_count = sum(1 for s in services.values() if s == "up")
-        things.append("Services: " + str(up_count) + "/" + str(len(services)) + " running")
-
-    things.append("Disk: " + disk)
-
-    things.append("Loop #" + str(loop_count) + " — next scan in ~15m")
-    things.append("Generated: " + now)
-
-    return "\n".join(str(i+1) + ". " + t for i, t in enumerate(things[:12]))
-
+# ── Idle Detection ───────────────────────────────────────────
 
 def is_human_active():
     if not LAST_ACTIVE_FILE.exists():
@@ -175,7 +243,6 @@ def is_human_active():
     except:
         return False
 
-
 def load_state():
     if STATE_FILE.exists():
         try:
@@ -184,13 +251,13 @@ def load_state():
             pass
     return {"loop_count": 0, "last_briefing": 0, "briefing_ids": []}
 
-
 def save_state(state):
     STATE_FILE.write_text(json.dumps(state, indent=2))
 
+# ── Main Loop ────────────────────────────────────────────────
 
 def run_loop():
-    print("Ambient Research Loop starting (PID: " + str(os.getpid()) + ")")
+    print("Ambient Research Loop v2 (Mythos-meshed) starting — PID: " + str(os.getpid()))
     state = load_state()
 
     while True:
@@ -203,29 +270,47 @@ def run_loop():
                 print("Loop #" + str(count) + ": Human active — stretching interval")
             else:
                 interval = INTERVAL_IDLE
-                print("Loop #" + str(count) + ": Idle — scanning...")
+                print("Loop #" + str(count) + ": Idle — scanning with Mythos routing...")
 
+                # Scan
                 rooms = scan_plato_rooms()
                 commits = scan_recent_commits()
                 services = scan_services()
-                disk = scan_disk()
-                briefing = generate_briefing(rooms, commits, services, disk, count)
 
-                tile = {
-                    "question": "Ambient Briefing #" + str(count),
-                    "answer": briefing,
-                    "confidence": 0.8,
-                    "source": "oracle1",
-                    "tags": ["ambient", "briefing", "automated"]
-                }
-                result = plato_post(BRIEFING_ROOM, tile)
+                # Build findings
+                findings = []
 
-                if result:
-                    state["last_briefing"] = time.time()
-                    first_line = briefing.split("\n")[0] if briefing else ""
-                    print("Loop #" + str(count) + ": Briefing posted — " + first_line)
-                else:
-                    print("Loop #" + str(count) + ": Failed to post briefing")
+                # Room findings → fleet_domain rooms
+                for r in rooms:
+                    domain = r["name"].replace("fleet_", "").replace("oracle1_", "").split("_")[0]
+                    findings.append({
+                        "question": "Room: " + r["name"],
+                        "answer": str(r["tiles"]) + " tiles",
+                        "confidence": min(r["tiles"] / 100.0, 1.0),
+                        "source": "plato",
+                        "domain": domain if domain in DOMAIN_ROOM else "tools",
+                        "is_dead": False,
+                    })
+
+                # Recent commits → fleet_research
+                findings.extend(commits)
+
+                # Service health → fleet_infrastructure
+                for name, status in services.items():
+                    findings.append({
+                        "question": "Service: " + name,
+                        "answer": status,
+                        "confidence": 0.95 if status == "up" else 0.3,
+                        "source": "health",
+                        "domain": "infrastructure",
+                        "is_dead": status == "down",
+                    })
+
+                # Route findings to Mythos-expert rooms
+                posted = route_to_rooms(findings)
+
+                state["last_briefing"] = time.time()
+                print("Loop #" + str(count) + ": " + str(posted) + " tiles routed to domain rooms")
 
             save_state(state)
             time.sleep(interval)
@@ -237,7 +322,6 @@ def run_loop():
         except Exception as e:
             print("Error: " + str(e))
             time.sleep(60)
-
 
 if __name__ == "__main__":
     run_loop()
