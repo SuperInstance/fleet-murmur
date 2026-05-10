@@ -37,15 +37,15 @@
 ## 🟡 P1 — Week 1 (2026-05-07 to 2026-05-13)
 
 ### Audit Items (remaining from 12 CRITICAL + 14 HIGH)
-- [ ] Keeper auth middleware — add API key to localhost:8900 endpoints (real risk: only if ports directly exposed)
+- [ ] Keeper auth middleware — add API key to localhost:8900 endpoints (subagent working)
 - [ ] Cocapn→SuperInstance naming drift — decide canonical name for org/repos/branding
-- [ ] 3 duplicate A2A repos — agent-a2a, a2a-adapter, a2a-agent-protocol (zero-divergence Lucineer forks)
-- [ ] agent-coordinator broken install URL — points to casey/websocket-fabric instead of SuperInstance/agent-coordinator
-- [ ] Add CONTRIBUTING.md + issue/PR templates to .github
-- [ ] Zero CI/CD — add GitHub Actions to all working repos
+- [ ] 3 duplicate A2A repos — agent-a2a, a2a-adapter, a2a-agent-protocol (subagent working)
+- [ ] agent-coordinator broken install URL — points to casey/websocket-fabric instead of SuperInstance/agent-coordinator (subagent working)
+- [ ] Add CONTRIBUTING.md + issue/PR templates to .github (subagent working)
+- [ ] Zero CI/CD — add GitHub Actions to all working repos (subagent working)
 
 ### Fleet Work
-- [ ] Phase 2: Ambient research loop (idle detection → "12 things" briefing)
+- [x] Phase 2: Ambient research loop — running as daemon (PID 412946), posts to PLATO oracle1_briefing
 - [ ] Phase 3: cocapn.ai PHP→JS upgrade with PodiumJS WebGPU
 - [ ] Connect fleet-coordinate-js to browser demos (PLATO tiles → web visualization)
 

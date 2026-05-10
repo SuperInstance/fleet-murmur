@@ -1,0 +1,25 @@
+   Compiling arm-constraint-bench v0.1.0 (/tmp/arm-simd-experiments/rust)
+    Finished `release` profile [optimized] target(s) in 3.80s
+     Running `target/release/arm-constraint-bench`
+======================================================================
+ARM NEON Constraint Checker — Rust Neoverse-N1
+======================================================================
+
+  1. Pure scalar (baseline):
+     Time: 41.298ms  Throughput: 2421451972 checks/s
+     Pass rate: 51.0%  Per check: 0.41ns
+
+  2. Portable SIMD i32x4 (auto-NEON):
+     Time: 143.321ms  Throughput: 697735444 checks/s
+
+  3. 10 constraints (SIMD AND chain):
+     Time: 288.264ms  Throughput: 346904620 input-sets/s  Effective: 3469046202 checks/s
+
+  4. Bitmask popcount (10M ops):
+     Popcount: 0.000ms  = 62500000000000 /s
+
+  5. Domain intersection (10M ops):
+     Intersect: 0.000ms  = 250000000000000 /s
+
+======================================================================
+ARM Neoverse-N1 — 128-bit NEON (portable SIMD i32x4)

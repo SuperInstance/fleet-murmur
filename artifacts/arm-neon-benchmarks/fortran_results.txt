@@ -1,0 +1,24 @@
+ ============================================================
+ ARM NEON Fortran Constraint Kernel — Neoverse-N1
+ ============================================================
+
+  Range check [0:50]:
+  Time:    143.301ms  Throughput:     697831872. checks/s
+  Pass rate:   51.0%
+  Per check:   1.43ns
+
+ 10 constraints (whole-array AND chains):
+  Time:    491.370ms  Throughput:     203512624. input sets/s
+  Effective:    2035126272. individual checks/s
+  Pass rate:   36.0%
+
+ Bitmask popcount:
+  Popcount:      0.003ms  = 3355443200000. /s
+
+ Domain intersection (IAND):
+  Intersect:      0.001ms  = 9868950896640. /s
+
+ ============================================================
+ ARM NEON (via gfortran auto-vectorization)
+ Neoverse-N1 — 128-bit SIMD, 4-wide int32
+ ============================================================

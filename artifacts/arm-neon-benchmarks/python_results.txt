@@ -1,0 +1,28 @@
+======================================================================
+ARM NEON Constraint Checker — Python numpy baseline
+======================================================================
+
+  Data generation: 426.9ms
+
+  1. Python loop (pure Python, slow):
+     Sample (1M): 181.8ms  Rate: 5501333/s
+
+  2. numpy vectorized (NEON via BLAS):
+     Time: 92.016ms  Throughput: 1086762103 checks/s
+     Pass rate: 51.0%  Per check: 0.92ns
+
+  3. 10 constraints (numpy AND chain):
+     Time: 1426.809ms  Throughput: 70086486 input-sets/s
+     Effective: 700864855 individual checks/s
+     Pass rate: 36.0%
+
+  4. Bitmask popcount (10,000,000 ops):
+     Popcount: 6623.0ms  = 1509880 /s
+
+  5. Domain intersection (10,000,000 ops):
+     Intersect: 14.586ms  = 685601452 /s
+
+======================================================================
+Python numpy — BLAS backend auto-vectorizes to NEON
+Only suitable for prototyping — 100x slower than native Fortran/Rust
+======================================================================
