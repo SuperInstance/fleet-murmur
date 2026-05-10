@@ -55,3 +55,9 @@ Add to HEARTBEAT.md: "Verify CREDENTIALS.md entries (rotate through 3-4 per hear
 - Key2 (dashboard): ~/.config/cocapn/rubygems-key-dashboard → 96f7768c32c2b99bf9246174bc352b112fcda7a48d0a0a4f
 - Issue: Key works for GET but fails POST (gem push) — 401 Access Denied
 - Likely: Account needs "Sign in for command line" enabled on rubygems.org
+
+## NPM Token Update (2026-05-07)
+- File: `~/.config/cocapn/npm-token` (updated 2026-05-07)
+- Account: superinstance (verified via `npm whoami`)
+- Token: (stored in vault AND config file)
+- Action: npm publishing now works for @superinstance scope
