@@ -14,7 +14,7 @@
       "status": "active",
       "trust_score": 0.9,
       "load": 0.1,
-      "last_seen": 1777619648.566939
+      "last_seen": 1778405001.462458
     },
     "test-probe": {
       "agent_id": "test-probe",
@@ -27,7 +27,7 @@
       "status": "offline",
       "trust_score": 0.5,
       "load": 0.0,
-      "last_seen": 1777255802.1251283
+      "last_seen": 1778405001.4624996
     },
     "unknown": {
       "agent_id": "unknown",
@@ -37,12 +37,22 @@
       "status": "offline",
       "trust_score": 0.5,
       "load": 0.0,
-      "last_seen": 1777255802.125137
+      "last_seen": 1778405001.4625084
+    },
+    "test-agent-2": {
+      "agent_id": "test-agent-2",
+      "name": "test-agent-2",
+      "capabilities": [],
+      "endpoint": "",
+      "status": "active",
+      "trust_score": 0.5,
+      "load": 0.0,
+      "last_seen": 1778405036.6066906
     }
   },
-  "active_count": 1,
-  "total_registered": 3,
-  "beacons_active": 1,
+  "active_count": 2,
+  "total_registered": 4,
+  "beacons_active": 3,
   "bottles_sent": 1,
-  "last_update": 1777619648.567005
+  "last_update": 1778405036.6067855
 }

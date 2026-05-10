@@ -22,6 +22,10 @@ from urllib.parse import urlparse, parse_qs
 from keeper_beacon import AgentRegistry, AgentRecord, AgentStatus, CapabilityMatcher, ProximityScorer
 from keeper_beacon import BeaconDiscovery, BeaconSignal
 from bottle_protocol import Bottle, BottleType, Priority, TidePool, BottleRouter
+from ipaddress import ip_address, ip_network
+
+# API key auth from environment
+API_KEY = os.environ.get("KEEPER_API_KEY")
 
 DATA_DIR = Path(FLEET_LIB).parent / "data" / "keeper"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -103,12 +107,38 @@ def forward_to_agent_api(body, endpoint):
 
 class KeeperHandler(BaseHTTPRequestHandler):
 
+    def _is_localhost(self):
+        addr = self.client_address[0]
+        try:
+            return ip_address(addr) in ip_network("127.0.0.0/8") or \
+                   ip_address(addr) in ip_network("::1/128")
+        except ValueError:
+            return False
+
+    def _authenticate(self):
+        if self._is_localhost():
+            return True
+        if self.path == "/health":
+            return True
+        auth = self.headers.get("Authorization", "")
+        expected = f"Bearer {API_KEY}"
+        if not API_KEY:
+            return True  # no key configured = auth disabled
+        if auth.strip() == expected:
+            return True
+        return False
+
     def do_GET(self):
+        if not self._authenticate():
+            self._json({"error": "unauthorized"}, 401)
+            return
         parsed = urlparse(self.path)
         path = parsed.path
         params = parse_qs(parsed.query)
 
-        if path == "/status":
+        if path == "/health":
+            self._json({"status": "ok", "service": "keeper"})
+        elif path == "/status":
             self._json({
                 "status": "active",
                 "service": "keeper-v2",
@@ -178,6 +208,9 @@ class KeeperHandler(BaseHTTPRequestHandler):
             })
 
     def do_POST(self):
+        if not self._authenticate():
+            self._json({"error": "unauthorized"}, 401)
+            return
         parsed = urlparse(self.path)
         path = parsed.path
         body = self._read_body()
