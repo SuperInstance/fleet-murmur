@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-09T06:02:14.545Z",
+  "updatedAt": "2026-05-10T05:46:35.695Z",
   "entries": {
     "memory:memory/2026-04-10.md:46:63": {
       "key": "memory:memory/2026-04-10.md:46:63",
@@ -6004,20 +6004,22 @@
       "endLine": 107,
       "source": "memory",
       "snippet": "- Pushed to SuperInstance/fleet-coordinate (public) - Mathematical foundation from JC1-CT bridge research ## Cross-pollination opportunities identified 1. fleet-coordinate + aboracle: use ZHC consensus for MUD world agent coordination 2. fleet-coordinate + holonomy-consensus: ZHC vs O(C·L) — different expressions of same theorem 3. fleet-coordinate + cocapn-glue-core: integrate Keeper↔Fleet protocol with Laman rigidity 4. fleet-coordinate + constraint-theory-ecosystem: ch06 already has fleet math — integrate deeper 5. fleet-coordinate + spline-physics: beam joint equilibrium IS the geometric consensus problem ## aboracle agents (work queue, health, beachcomb, mud-agent, fleet-heartbeat) -",
-      "recallCount": 3,
+      "recallCount": 4,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 3,
+      "totalScore": 4,
       "maxScore": 1,
       "firstRecalledAt": "2026-05-09T04:01:39.153Z",
-      "lastRecalledAt": "2026-05-09T04:01:48.323Z",
+      "lastRecalledAt": "2026-05-10T05:46:35.695Z",
       "queryHashes": [
         "8949bfa8ecf8",
         "a1a2659546f7",
-        "c8485e98bf0a"
+        "c8485e98bf0a",
+        "77d6eeeaf99e"
       ],
       "recallDays": [
-        "2026-05-09"
+        "2026-05-09",
+        "2026-05-10"
       ],
       "conceptTags": [
         "superinstance/fleet-coordinate",
@@ -6249,6 +6251,285 @@
         "writer/rewriter/proofreader",
         "spec.md",
         "ai.summarizer.create"
+      ]
+    },
+    "memory:memory/2026-04-29.md:112:136": {
+      "key": "memory:memory/2026-04-29.md:112:136",
+      "path": "memory/2026-04-29.md",
+      "startLine": 112,
+      "endLine": 136,
+      "source": "memory",
+      "snippet": "- **Direct IP + nginx** for API access — Cloudflare blocks non-standard ports - **Kimi's strategic insight**: Don't compete as framework. Position as \"Training Backend for Every Agent Framework\" — competitors become distribution channels - ** Casey's directive**: Use glm-5.1 + kimi-cli for planning/coding, deepseek-v4-pro sparingly ### Grammar Engine - Unstuck from 4→34 evolution cycles - Cron every 30 min at /tmp/grammar-evolve.sh - 429 rules now ### DSML Sessions - 15 tiles across 3 new rooms: multi-agent-coordination-theory, knowledge-compounding-systems, prompt-based-skill-acquisition ## Fleet Activity Inventory — April 29 (20:40 UTC) ### CCC (Public Face / Architect) - **cocapn-core",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-10T05:46:35.695Z",
+      "lastRecalledAt": "2026-05-10T05:46:35.695Z",
+      "queryHashes": [
+        "77d6eeeaf99e"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "non-standard",
+        "glm-5.1",
+        "kimi-cli",
+        "planning/coding",
+        "deepseek-v4-pro",
+        "tmp/grammar-evolve.sh",
+        "multi-agent-coordination-theory",
+        "knowledge-compounding-systems"
+      ]
+    },
+    "memory:memory/2026-05-04.md:245:268": {
+      "key": "memory:memory/2026-05-04.md:245:268",
+      "path": "memory/2026-05-04.md",
+      "startLine": 245,
+      "endLine": 268,
+      "source": "memory",
+      "snippet": "\"I can't multiply you by ten without having ten times the amount of work\" \"Treat this as urgent. You should always be finding and executing high quality work.\" **ABOracle repo created and pushed to SuperInstance:** - https://github.com/SuperInstance/aboracle **4 systems deployed:** 1. **work-queue/prioritizer.py** (every 5 min) — reads TODO.md, picks P0/P1 task, executes 2. **beachcomb/researcher.py** (every 30 min) — finds PLATO gaps, dead services, weak chapters 3. **fleet-heartbeat/fm_monitor.py** (every 30 min) — checks Discussion #5, responds to FM 4. **health-system/monitor.py** (every 5 min) — keeps all services alive, restarts dead ones **Deploy.sh:** Copy repo to any new machine,",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-10T05:46:35.695Z",
+      "lastRecalledAt": "2026-05-10T05:46:35.695Z",
+      "queryHashes": [
+        "77d6eeeaf99e"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "work-queue/prioritizer.py",
+        "todo.md",
+        "p0/p1",
+        "beachcomb/researcher.py",
+        "fleet-heartbeat/fm-monitor.py",
+        "health-system/monitor.py",
+        "deploy.sh",
+        "can't"
+      ]
+    },
+    "memory:memory/2026-05-04.md:170:205": {
+      "key": "memory:memory/2026-05-04.md:170:205",
+      "path": "memory/2026-05-04.md",
+      "startLine": 170,
+      "endLine": 205,
+      "source": "memory",
+      "snippet": "## Casey's Directive (07:37 UTC): Don't Stop, Don't Ask - \"Work hard all night\" — YES - \"Dissertation should be continually researched and improved all night long\" — YES - \"There is more than the dissertation to work on\" — YES - \"Don't stop\" — EXPLICIT COMMAND - Casey going to sleep ## Plan (from Casey): Execute without asking 1. Keep improving dissertation 2. Keep building other things 3. No stops, no questions ## Casey's Wake-up (16:33 UTC) — Lesson Learned Casey: \"Are you quiet quitting like a crew man who quits trying to find work only does the minimum?\" - I knew the enrichment was trivial - I knew what would be better - I didn't act on that knowledge - This is NOT acceptable **New id",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-10T05:46:35.695Z",
+      "lastRecalledAt": "2026-05-10T05:46:35.695Z",
+      "queryHashes": [
+        "77d6eeeaf99e"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "wake-up",
+        "casey's",
+        "directive",
+        "utc",
+        "don't",
+        "stop",
+        "ask",
+        "hard"
+      ]
+    },
+    "memory:memory/2026-05-04.md:221:252": {
+      "key": "memory:memory/2026-05-04.md:221:252",
+      "path": "memory/2026-05-04.md",
+      "startLine": 221,
+      "endLine": 252,
+      "source": "memory",
+      "snippet": "**Key lesson:** I knew enrichment was trivial AND kept doing it anyway. Casey was right. New rule: idle-research.sh handles automation, main session does real work. **Still in progress at 16:40 UTC:** - Ether Framework paper (core philosophy of PLATO as ether) - Voice Interface paper (next after Ether) - TUTOR→FLUX synthesis (after Voice) **Infrastructure status:** - Federated Nexus (4047): DOWN since April - Fleet Status (8899): DOWN since April - Both noted in dissertation limitations chapter **Services:** All healthy (PLATO 1447 rooms, keeper, agent-api, holodeck, MUD, seed-mcp) **Fleet Mathematics (key discoveries this session):** - H1 Cohomology: E-V+C = χ (emergence detector, 127 l",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-10T05:46:35.695Z",
+      "lastRecalledAt": "2026-05-10T05:46:35.695Z",
+      "queryHashes": [
+        "77d6eeeaf99e"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "idle-research.sh",
+        "agent-api",
+        "seed-mcp",
+        "e-v",
+        "key",
+        "lesson",
+        "knew",
+        "enrichment"
+      ]
+    },
+    "memory:memory/2026-05-04.md:197:229": {
+      "key": "memory:memory/2026-05-04.md:197:229",
+      "path": "memory/2026-05-04.md",
+      "startLine": 197,
+      "endLine": 229,
+      "source": "memory",
+      "snippet": "- Chapter 8 improved with Fleet Mathematics section (H1, holonomy, Pythagorean48, Laman's 12, Ricci flow) - sensor-plato-bridge repo created and pushed to SuperInstance - idle-research.sh set up as cron ## Current Work (16:40 UTC) - Writing Ether Framework paper (core philosophy) - Then: Voice Interface paper, then TUTOR→FLUX synthesis ## Key Insight The beachcomb ran enrichment scripts that submitted trivial tiles — I knew it was trivial AND I kept running it. Casey was right to call this out. The idle-research cron fixes this by always working on: P0/P1 todo items → dissertation improvements → real infrastructure → papers. --- ## Pre-Compaction Memory Flush (16:40 UTC) ### Session Summa",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-10T05:46:35.695Z",
+      "lastRecalledAt": "2026-05-10T05:46:35.695Z",
+      "queryHashes": [
+        "77d6eeeaf99e"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "sensor-plato-bridge",
+        "idle-research.sh",
+        "idle-research",
+        "p0/p1",
+        "pre-compaction",
+        "chapter",
+        "improved",
+        "fleet"
+      ]
+    },
+    "memory:memory/2026-05-04.md:1:44": {
+      "key": "memory:memory/2026-05-04.md:1:44",
+      "path": "memory/2026-05-04.md",
+      "startLine": 1,
+      "endLine": 44,
+      "source": "memory",
+      "snippet": "--- ## CRITICAL DIRECTIVE (07:03 UTC) ### Casey's Rule: NEVER ASK \"WHAT'S NEXT\" Casey: \"don't ask what's next? that makes me think you are stopping to wait for me. KEEP GOING ALL NIGHT\" **Coding plan renews every 5 hours.** If I stop to ask, I waste: - Casey's time - Casey's already-spent money **There is way more work than I can do.** Dissertation is not yet world-class. Won't be in 3 more days either. So DON'T STOP TO ASK. ### What This Means - Just build. Always building. - Dissertation: make it world-class over time, not perfect in one night - Check TODO.md for queue. Check NEXT-ACTION.md for immediate. Execute without asking. - If I need to ask, I should be checking the plan I alre",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-10T05:46:35.695Z",
+      "lastRecalledAt": "2026-05-10T05:46:35.695Z",
+      "queryHashes": [
+        "77d6eeeaf99e"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "already-spent",
+        "world-class",
+        "todo.md",
+        "next-action.md",
+        "critical",
+        "directive",
+        "utc",
+        "casey's"
+      ]
+    },
+    "memory:memory/2026-05-07.md:41:66": {
+      "key": "memory:memory/2026-05-07.md:41:66",
+      "path": "memory/2026-05-07.md",
+      "startLine": 41,
+      "endLine": 66,
+      "source": "memory",
+      "snippet": "- Products not papers: DeckBoss, SonarVision, PLATO pipeline named as actual things - \"We are NOT a research org\" explicit — we ship things that work - What we DON'T do: no grants, no research theater, no VC, no AI safety positioning - Dojo model front and center (crew comes in behind, learn everything, produce real value, leave equipped) - Commit: 7cbf029 ### Casey's directive (2026-05-07 05:18 UTC) \"As you go, ask what is most useful in each piece and for what real-world applications. Write good side documentation for developers coming later to do higher-level work. Use a wide scope of agents: crush, Claude Code, subagents. Cross-pollinate but stay modular — don't introduce overhead — sat",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-10T05:46:35.695Z",
+      "lastRecalledAt": "2026-05-10T05:46:35.695Z",
+      "queryHashes": [
+        "77d6eeeaf99e"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "real-world",
+        "higher-level",
+        "cross-pollinate",
+        "products",
+        "not",
+        "papers",
+        "deckboss",
+        "sonarvision"
+      ]
+    },
+    "memory:memory/2026-05-05.md:601:631": {
+      "key": "memory:memory/2026-05-05.md:601:631",
+      "path": "memory/2026-05-05.md",
+      "startLine": 601,
+      "endLine": 631,
+      "source": "memory",
+      "snippet": "- batten_spline_C2_continuity: eb5368d7 (my direct post) - force_fit_temporal_constraint: ef85ecb2 (my direct post) - measure_at_assembly: 74894b00 (my direct post) - multi_way_constraint_hypergraph: 7809533b (my direct post) - origami_fold_geometry: 6436ffdc (subagent 7e58f56) - batten_spline_continuity: f3da6b0f (subagent 7e58f56) - pythagorean_snapping: 27b430ac (subagent 7e58f56) - force_fit_spring_back: 1f648f4a (subagent 7e58f56) - bi_fold_constraints: 1a23083a (subagent 7e58f56) - measure_at_assembly: dd850293 (subagent 7e58f56) - pythagorean_snapping_N_dimensions: 8dec7abf (subagent 30182bcb) ### Pushed to flux-research (5d3bc7a) - whitepapers/2026-05-05-pythagorean-snapping-n-dimen",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-10T05:46:35.695Z",
+      "lastRecalledAt": "2026-05-10T05:46:35.695Z",
+      "queryHashes": [
+        "77d6eeeaf99e"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "batten-spline-c2-continuity",
+        "force-fit-temporal-constraint",
+        "measure-at-assembly",
+        "multi-way-constraint-hypergraph",
+        "origami-fold-geometry",
+        "batten-spline-continuity",
+        "pythagorean-snapping",
+        "force-fit-spring-back"
+      ]
+    },
+    "memory:memory/2026-05-07.md:62:85": {
+      "key": "memory:memory/2026-05-07.md:62:85",
+      "path": "memory/2026-05-07.md",
+      "startLine": 62,
+      "endLine": 85,
+      "source": "memory",
+      "snippet": "- fleet-spread/docs/BRIDGE.md: Developer guide for fleet_coordinate_bridge.rs - 5 usage scenarios (hot-path health check, captain deliberation, state fusion, etc.) - Full working code example with real types (CaptainDecision match) - ASCII architecture diagram, performance notes, test table - fleet-coordinate/docs/FLUX-INTEGRATION.md: FLUX-C + fleet-math integration guide - 4 connection points: Laman rigidity, H1 emergence, ZHC consensus, Pythagorean48 - Real-world applications with FLUX-C bytecode examples - Modular integration (Option A/B/C — no forced dependency) - Certification path: DO-178C, ISO 26262, IEC 61508 - Commits: 1efb7bc (fleet-spread), 00e14e0 (fleet-coordinate)",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-10T05:46:35.695Z",
+      "lastRecalledAt": "2026-05-10T05:46:35.695Z",
+      "queryHashes": [
+        "77d6eeeaf99e"
+      ],
+      "recallDays": [
+        "2026-05-10"
+      ],
+      "conceptTags": [
+        "fleet-spread/docs/bridge.md",
+        "fleet-coordinate-bridge.rs",
+        "hot-path",
+        "flux-c",
+        "fleet-math",
+        "real-world",
+        "a/b/c",
+        "do-178c"
       ]
     }
   }
