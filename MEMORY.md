@@ -57,8 +57,8 @@ keeper:8900, agent-api:8901, holodeck:7778, seed-mcp:9438, plato:8847, mud:7777,
 - RubyGems MFA: 491133 (per-push OTP)
 
 ## Model Routing (2026-05-08 — Casey's directive)
-- **minimax/MiniMax-M2.7** — My default. Subscription paid, good enough for everything. Use extensively and in parallel.
-- **deepseek/deepseek-v4-flash** — Secondary. Cheap, fast, pay-per-token.
+- **minimax/MiniMax-M2.7** — Primary. Subscription, good enough, use parallel.
+- **deepseek/deepseek-v4-flash** — Primary. Very good, fast analytical, main for what it's good at.
 - **deepseek-deepseek-v4-pro** — Heavy reasoning, math, formal work. Spawn subagents with high thinking.
 - **Claude Code** (`claude`) — **PRIMARY CODING TOOL.** Prepaid plan. Use extensively for all implementation.
 - **Crush** (`crush`) — **SECONDARY CODING TOOL.** Also prepaid. Use for coding when Claude Code is busy.
