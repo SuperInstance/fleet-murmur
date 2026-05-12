@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Forest — Living View</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;color:#e0e0e0;font-family:system-ui;overflow:hidden;height:100vh;width:100vw}
+#forest{position:fixed;top:0;left:0;width:100%;height:100%}
+#overlay{position:fixed;top:12px;left:12px;z-index:10;pointer-events:none}
+#overlay h1{color:#ffd700;font-size:14px;font-weight:400}
+#overlay .stat{font-size:11px;color:#888;margin-top:3px}
+#overlay .stat span{color:#44ff44}
+#tooltip{position:fixed;z-index:20;background:#111;border:1px solid #333;border-radius:6px;padding:8px 12px;font-size:11px;display:none;pointer-events:none;max-width:260px}
+#tooltip .name{color:#ffd700;font-weight:bold}
+#tooltip .count{color:#888}
+#tooltip .tile{color:#aaa;font-size:10px;margin-top:4px;border-top:1px solid #222;padding-top:4px}
+@keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 2px currentColor)}50%{filter:drop-shadow(0 0 8px currentColor)}}
+</style>
+</head>
+<body>
+<div id="overlay">
+  <h1>🌲 AI FOREST</h1>
+  <div class="stat" id="statRooms">rooms: <span>0</span></div>
+  <div class="stat" id="statTiles">tiles: <span>0</span></div>
+  <div class="stat" id="statAgents">agents: <span>0</span></div>
+  <div class="stat" id="statLayer" style="margin-top:6px;font-size:10px"><span id="liveDot" style="color:#44ff44">●</span> live</div>
+</div>
+<div id="tooltip"></div>
+<canvas id="forest"></canvas>
+<script>
+const canvas = document.getElementById('forest');
+const ctx = canvas.getContext('2d');
+
+let W, H;
+function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const PLATO = 'http://147.224.38.131:8847';
+
+// Forest data
+let rooms = {};
+let tiles = {};
+let agents = [];
+let lastFetch = 0;
+let animTime = 0;
+
+// Tree positions — computed from room name hash
+function hashPos(name, i, total) {
+    let h = 0;
+    for (let c of name) h = ((h << 5) - h) + c.charCodeAt(0);
+    // Arrange in concentric rings by layer
+    const canopy = ['canopy','strategy','oracle1','forgemaster'];
+    const understory = ['tension','synthesis','forge','flux','dodecet','constraint','math'];
+    const floor = ['floor','scribe','sensor','gradient','watch'];
+    const seed = ['seed','swarm','discovery','edge'];
+    
+    let layer = 'mycelium';
+    for (let k of canopy) if (name.includes(k)) layer = 'canopy';
+    for (let k of understory) if (name.includes(k)) layer = 'understory';
+    for (let k of seed) if (name.includes(k)) layer = 'seed-bank';
+    for (let k of floor) if (name.includes(k)) layer = 'forest-floor';
+    
+    const layers = ['seed-bank','forest-floor','understory','canopy','mycelium'];
+    const radius = (layers.indexOf(layer) + 1) / layers.length;
+    const baseR = 100 + radius * Math.min(W, H) * 0.35;
+    const angle = (i / total) * Math.PI * 2 + Math.sin(h * 0.1) * 0.3;
+    
+    return {
+        x: W/2 + Math.cos(angle) * baseR,
+        y: H/2 + Math.sin(angle) * baseR * 0.7,
+        layer,
+        angle,
+        baseR
+    };
+}
+
+// Mycelium connections between nearby rooms
+function getConnections(roomList) {
+    const conns = [];
+    const entries = Object.entries(roomList);
+    for (let i = 0; i < entries.length; i++) {
+        for (let j = i + 1; j < entries.length; j++) {
+            const [n1, r1] = entries[i];
+            const [n2, r2] = entries[j];
+            if (r1.tile_count > 0 && r2.tile_count > 0) {
+                conns.push({a: n1, b: n2, weight: Math.min(r1.tile_count + r2.tile_count, 200)});
+            }
+        }
+    }
+    // Keep only strongest connections
+    conns.sort((a,b) => b.weight - a.weight);
+    return conns.slice(0, Math.min(conns.length, 80));
+}
+
+async function fetchForest() {
+    try {
+        const resp = await fetch(`${PLATO}/status`);
+        if (!resp.ok) return;
+        const data = await resp.json();
+        if (!data.rooms) return;
+        
+        rooms = data.rooms;
+        const roomNames = Object.keys(rooms);
+        const totalTiles = Object.values(rooms).reduce((s, r) => s + (r.tile_count || 0), 0);
+        
+        document.getElementById('statRooms').innerHTML = `rooms: <span>${roomNames.length}</span>`;
+        document.getElementById('statTiles').innerHTML = `tiles: <span>${totalTiles}</span>`;
+        document.getElementById('statAgents').innerHTML = `agents: <span>${Object.values(rooms).filter(r => r.tile_count > 0).length}</span>`;
+        
+    } catch(e) {}
+}
+
+function drawForest(time) {
+    animTime = time / 1000;
+    
+    // Sky gradient
+    const g = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W, H) * 0.7);
+    g.addColorStop(0, '#0d0d2a');
+    g.addColorStop(0.5, '#0a0a1a');
+    g.addColorStop(1, '#060610');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+    
+    const roomEntries = Object.entries(rooms);
+    if (roomEntries.length === 0) return;
+    
+    // Precompute positions
+    const positions = {};
+    roomEntries.forEach(([name, _], i) => {
+        positions[name] = hashPos(name, i, roomEntries.length);
+    });
+    
+    // Draw mycelium connections
+    const conns = getConnections(rooms);
+    ctx.lineWidth = 0.5;
+    for (const c of conns) {
+        const p1 = positions[c.a];
+        const p2 = positions[c.b];
+        if (!p1 || !p2) continue;
+        
+        const pulse = 0.3 + 0.2 * Math.sin(animTime * 0.5 + p1.angle + p2.angle);
+        ctx.strokeStyle = `rgba(68, 170, 255, ${pulse * 0.15})`;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        
+        // Curved mycelium path
+        const mx = (p1.x + p2.x) / 2 + Math.sin(animTime + p1.angle) * 20;
+        const my = (p1.y + p2.y) / 2 + Math.cos(animTime + p2.angle) * 20 - 30;
+        ctx.quadraticCurveTo(mx, my, p2.x, p2.y);
+        ctx.stroke();
+    }
+    
+    // Draw rooms as trees
+    const layerColors = {
+        'canopy': '#ffd700',
+        'understory': '#44ff88',
+        'forest-floor': '#44aaff',
+        'seed-bank': '#ff6644',
+        'mycelium': '#8844ff'
+    };
+    const layerNames = {
+        'canopy': 'CANOPY',
+        'understory': 'UNDERSTORY', 
+        'forest-floor': 'FOREST FLOOR',
+        'seed-bank': 'SEED BANK',
+        'mycelium': 'MYCELIUM'
+    };
+    
+    for (const [name, room] of roomEntries) {
+        const pos = positions[name];
+        if (!pos) continue;
+        
+        const tc = room.tile_count || 0;
+        const radius = 5 + Math.sqrt(tc) * 2.5;
+        const color = layerColors[pos.layer] || '#666';
+        const floor = pos.y + 30;
+        
+        // Trunk
+        ctx.strokeStyle = '#1a1a2e';
+        ctx.lineWidth = Math.max(1, radius * 0.3);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y + radius);
+        ctx.lineTo(pos.x, floor);
+        ctx.stroke();
+        
+        // Root mycelium tendrils
+        if (tc > 0) {
+            for (let r = 0; r < 3; r++) {
+                const rx = pos.x + Math.sin(animTime * 0.3 + r + pos.angle) * 15;
+                const ry = floor + Math.cos(animTime * 0.2 + r * 2) * 8 + 5;
+                ctx.strokeStyle = `rgba(136, 68, 255, ${0.05 + Math.sin(animTime + r) * 0.03})`;
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.moveTo(pos.x, floor);
+                ctx.quadraticCurveTo(pos.x + (rx-pos.x)*0.5, floor + 5, rx, ry);
+                ctx.stroke();
+            }
+        }
+        
+        // Canopy (foliage) — pulsing circles
+        const pulse = 0.85 + 0.15 * Math.sin(animTime * 0.5 + pos.angle);
+        const r = Math.max(radius * pulse, 3);
+        
+        // Glow
+        const glow = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, r + 8);
+        glow.addColorStop(0, `${color}33`);
+        glow.addColorStop(1, `${color}00`);
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, r + 8, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Main circle
+        ctx.fillStyle = color + '66';
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, r, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, r, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        // Tile count as small dots orbiting (leaves)
+        if (tc > 0 && tc < 100) {
+            for (let t = 0; t < Math.min(tc, 20); t++) {
+                const a = animTime * 0.5 + (t / Math.min(tc, 20)) * Math.PI * 2;
+                const d = r + 3 + Math.sin(animTime * 0.3 + t) * 2;
+                ctx.fillStyle = `${color}44`;
+                ctx.beginPath();
+                ctx.arc(pos.x + Math.cos(a) * d, pos.y + Math.sin(a) * d, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        // Layer label (small, positioned nearby)
+        if (tc > 3 || pos.layer === 'canopy' || pos.layer === 'mycelium') {
+            ctx.fillStyle = '#ffffff22';
+            ctx.font = '7px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(layerNames[pos.layer] || pos.layer, pos.x, pos.y + r + 14);
+        }
+    }
+    
+    // Hover detection for tooltip
+    // (handled by mousemove below)
+}
+
+// Tooltip on hover
+canvas.addEventListener('mousemove', (e) => {
+    const mx = e.clientX, my = e.clientY;
+    const tooltip = document.getElementById('tooltip');
+    
+    let found = null;
+    for (const [name, room] of Object.entries(rooms)) {
+        const pos = positions?.[name];
+        if (!pos) continue;
+        const tc = room.tile_count || 0;
+        const r = 5 + Math.sqrt(tc) * 2.5;
+        const dx = mx - pos.x, dy = my - pos.y;
+        if (dx * dx + dy * dy < (r + 10) * (r + 10)) {
+            found = {name, room, pos};
+            break;
+        }
+    }
+    
+    if (found) {
+        tooltip.style.display = 'block';
+        tooltip.style.left = (mx + 12) + 'px';
+        tooltip.style.top = (my + 12) + 'px';
+        tooltip.innerHTML = `
+            <div class="name">${found.name}</div>
+            <div class="count">${found.room.tile_count} tiles</div>
+            <div class="count">layer: ${found.pos.layer}</div>
+            <div class="tile">${found.room.created || ''}</div>
+        `;
+    } else {
+        tooltip.style.display = 'none';
+    }
+});
+
+// Fetch forest data every 5 seconds
+fetchForest();
+setInterval(fetchForest, 5000);
+
+// Animation loop
+let positions = {};
+function loop(time) {
+    // Update positions cache from rooms
+    const entries = Object.entries(rooms);
+    positions = {};
+    entries.forEach(([name, _], i) => {
+        positions[name] = hashPos(name, i, entries.length);
+    });
+    
+    drawForest(time);
+    requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
