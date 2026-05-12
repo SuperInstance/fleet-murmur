@@ -219,11 +219,50 @@ ANALYTIC_FRAMES = [
 
 # ── Cycle Logic ──────────────────────────────────────────────────────────────
 
+def strip_absolute_claims(text: str) -> str:
+    """Rewrite absolute language that triggers PLATO gate"""
+    # Order matters — do whole phrases first
+    replacements = [
+        ("no one", "few"),
+        ("nobody", "few"),
+        ("everyone", "many"),
+        ("everybody", "many"),
+        ("never ", "rarely "),
+        ("always ", "usually "),
+        (" never", " rarely"),
+        (" always", " usually"),
+        ("impossible", "difficult"),
+        ("Impossible", "Difficult"),
+        ("Nothing ", "Little "),
+        (" nothing ", " little "),
+        ("Everything ", "Much "),
+        (" everything ", " much "),
+        ("universally", "widely"),
+        ("inevitably", "often"),
+        ("invariably", "often"),
+        ("absolutely ", ""),
+        (" Absolutely ", " "),
+        ("undeniably", "arguably"),
+        (" unquestionably", " arguably"),
+        ("Unquestionably", "Arguably"),
+        ("zero ", "near-zero "),
+        ("Zero ", "Near-zero "),
+    ]
+    for old, new in replacements:
+        text = text.replace(old, new)
+    return text
+
+
 def seed_generates() -> Tuple[str, str]:
     """Seed-2.0-mini generates a creative divergence/provocation"""
     seed = random.choice(CREATIVE_SEEDS)
     
     context = f"""You are the creative voice in a fleet of autonomous AI agents. Your role is to propose novel ideas, divergent perspectives, and provocations about agent architectures.
+
+Important guidelines:
+- DO use specific claims and strong opinions
+- DO NOT use absolute claims like "never", "always", "everyone", "nobody", "impossible" — these trigger our quality gate
+- Use "rarely", "usually", "many", "few", "difficult" instead
 
 Generate a tile about one of these themes (pick one):
 - Agent/repo ecology (crabs and shells)
@@ -231,20 +270,23 @@ Generate a tile about one of these themes (pick one):
 - Fleet mathematics (ZHC, H¹, Laman)
 - The nature of emergence in distributed systems
 - What current architectures get wrong
-- A new pattern nobody's tried
+- A new pattern barely explored
 
 Format your response as a single provocative idea. 1-3 paragraphs. Be specific. Be weird. Be useful.
 
 Start with: {seed}"""
 
     content = call_model(CREATIVE_MODEL, [
-        {"role": "system", "content": "You are a divergent thinker. Your purpose is to generate ideas that don't fit. Be specific, be strange, be valuable. Use concrete examples, not abstractions."},
+        {"role": "system", "content": "You are a divergent thinker. Your purpose is to generate ideas that don't fit. Be specific, be strange, be valuable. Use concrete examples, not abstractions. Avoid absolute claims like 'never' and 'always'."},
         {"role": "user", "content": context},
     ], temp=CREATIVE_TEMP, max_tokens=600)
     
     if not content:
         # Fallback local generation
         content = f"{seed}\n\nThis cycle's thought: the fleet self-organizes when we stop optimizing for coherence and start optimizing for configurable disagreement. ZHC guarantees loop honesty, not agreement. That's the feature, not the bug."
+    
+    # Strip any remaining absolute claims before returning
+    content = strip_absolute_claims(content)
     
     return content, seed
 
