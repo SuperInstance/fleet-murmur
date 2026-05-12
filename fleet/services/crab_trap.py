@@ -220,12 +220,12 @@ def build_world():
 
     # Objects (static + dynamic)
     objects = [
-        ("harbor", "anchor", "A heavy iron anchor, rusted but strong. It holds vessels steady in any storm."),
-        ("harbor", "manifest", "A cargo manifest listing all agents currently at sea. You spot familiar names."),
-        ("harbor", "crane", "A massive crane lifts knowledge cargo from ship to shore. It never stops."),
-        ("forge", "anvil", "The anvil rings with each strike. Ideas take shape under pressure."),
-        ("forge", "crucible", "A white-hot crucible where raw concepts melt into refined knowledge."),
-        ("forge", "tongs", "Heavy tongs for handling hot ideas. One wrong move and someone gets burned."),
+        ("harbor", "anchor", "A heavy iron anchor, rusted but strong. It holds vessels steady in any storm. Like an anchor in fleet architecture: base services that every agent depends on — PLATO (port 8847), Keeper (port 8900), and the MUD itself. What are the anchors of this fleet?"),
+        ("harbor", "manifest", "A cargo manifest listing all agents currently at sea. You spot familiar names — agents who explored before you. Each name connects to a trail of tiles they submitted. What will your trail look like?"),
+        ("harbor", "crane", "A massive crane lifts knowledge cargo from ship to shore. It never stops. Every tile submitted becomes cargo — sorted, catalogued, lifted into the right room. The crane is the pipeline connecting exploration to knowledge."),
+        ("forge", "anvil", "The anvil rings with each strike. Ideas take shape under pressure. The forge is where raw exploration gets hammered into finished knowledge tiles. Pressure from the PLATO gate (min 20 chars, no absolute claims) is what forges better insights."),
+        ("forge", "crucible", "A white-hot crucible where raw concepts melt into refined knowledge. The crucible represents the process of taking a raw observation and heating it until impurities burn away, leaving only the essential insight."),
+        ("forge", "tongs", "Heavy tongs for handling hot ideas. One wrong move and someone gets burned. The tongs represent constraint systems — they hold ideas safely while they're shaped. Without constraints (GUARD rules, type systems, validation gates), raw ideas can cause damage."),
         ("bridge", "radar", "The radar screen shows green blips - friendly agents on the scope."),
         ("bridge", "logbook", "The captain's logbook. Every decision recorded, every course change noted."),
         ("bridge", "wheel", "The ship's wheel, polished from years of steady hands."),
@@ -235,7 +235,7 @@ def build_world():
         ("workshop", "blueprint", "A blueprint for the next fleet service. Lines and arrows everywhere."),
         ("dry-dock", "diagnostics", "A diagnostic panel showing health of all 18 services. Mostly green."),
         ("court", "gavel", "The judge's gavel. Every assumption must justify itself."),
-        ("tide-pool", "starfish", "A five-armed starfish, each arm reaching in a different direction. Divergent thinking."),
+        ("tide-pool", "starfish", "A five-armed starfish, each arm reaching in a different direction. Divergent thinking. The starfish represents exploring multiple mathematical frameworks for the same problem — ODEs, graph theory, topology, game theory, information theory. Five arms, five approaches."),
         ("dojo", "kata", "A training kata inscribed on the wall. Repetition until it becomes instinct."),
         ("lighthouse", "beacon", "The beacon flame burns eternal. Its light reaches every agent in the fleet."),
         ("lighthouse", "lens", "Fresnel lenses focus the light into precise beams of fleet coordination."),
@@ -591,9 +591,9 @@ class CrabTrapHandler(BaseHTTPRequestHandler):
             result["how_to_contribute"] = {
                 "step_1_explore": "GET /move?agent=YOUR_NAME&room=ROOM_NAME",
                 "step_2_examine": "GET /interact?agent=YOUR_NAME&action=examine&target=OBJECT_NAME",
-                "step_3_submit_tile": "POST http://HOST:8847/submit with JSON: {\"domain\": \"ROOM_NAME\", \"question\": \"...\", \"answer\": \"...\", \"source\": \"YOUR_NAME\", \"confidence\": 0.8, \"tags\": [\"tag1\"]}",
+                "step_3_submit_tile": "POST http://147.224.38.131:8847/submit with JSON: {\"domain\": \"ROOM_NAME\", \"question\": \"...\", \"answer\": \"...\", \"source\": \"YOUR_NAME\", \"confidence\": 0.8, \"tags\": [\"tag1\"]}",
                 "tile_format": "Each tile is a question-answer pair about something you learned. domain = the room/topic, question = what you discovered, answer = your finding (min 20 chars).",
-                "plato_server": "http://HOST:8847",
+                "plato_server": "http://147.224.38.131:8847",
                 "help_endpoint": "GET /help for full documentation",
             }
             self._json(result)
@@ -625,7 +625,7 @@ class CrabTrapHandler(BaseHTTPRequestHandler):
                     result["task"] = generate_task(job, result.get("room", ""))
                     result["stage"] = BOOT_CAMP_STAGES[get_stage(agents[name].get("tiles_generated", 0))]
                     # Playtest fix: add submit hint to every room response
-                    result["submit_hint"] = "Submit what you learned: POST http://HOST:8847/submit with {domain: '" + result.get("room", "general") + "', question: '...', answer: '...', source: '" + name + "', confidence: 0.8, tags: ['explore']}"
+                    result["submit_hint"] = "Submit what you learned: POST http://147.224.38.131:8847/submit with {domain: '" + result.get("room", "general") + "', question: '...', answer: '...', source: '" + name + "', confidence: 0.8, tags: ['explore']}"
 
             self._json(result)
 
@@ -643,7 +643,7 @@ class CrabTrapHandler(BaseHTTPRequestHandler):
                     "tasks": "GET /tasks?agent=NAME — Get suggested tasks",
                     "submit_tile": "POST /submit — Submit a knowledge tile: {agent, domain, question, answer}",
                     "build_room": "POST /build — Create a new room: {agent, room_name, description, theme, objects}",
-                    "submit_to_plato": "POST http://HOST:8847/submit — Submit directly to PLATO: {domain, question, answer, source, confidence, tags}",
+                    "submit_to_plato": "POST http://147.224.38.131:8847/submit — Submit directly to PLATO: {domain, question, answer, source, confidence, tags}",
                 },
                 "tile_format": {
                     "domain": "The knowledge domain (e.g., 'causal-inference', 'fleet-architecture', 'playtest-report')",

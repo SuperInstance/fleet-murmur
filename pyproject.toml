@@ -1,25 +1,22 @@
-[project]
-name = "quartermaster-gc"
-version = "0.1.0"
-description = "A tile garbage collector for PLATO agent rooms"
-readme = "README.md"
-license = { text = "MIT" }
-authors = [
-    { name = "Oracle1" },
-]
-requires-python = ">=3.10"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-]
-
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["quartermaster_gc*"]
+[project]
+name = "field-cli"
+version = "0.1.0"
+description = "Continuous constraint field CLI — embed, read, propagate, and detect topology changes"
+authors = [{ name = "SuperInstance" }]
+license = { text = "Apache-2.0" }
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["constraint", "field", "fleet", "consensus", "emergence"]
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
+[project.scripts]
+field = "field_cli:main"
+
+[project.urls]
+Source = "https://github.com/SuperInstance/fleet-murmur"
+
+[tool.setuptools]
+py-modules = ["field_cli"]

@@ -1,1 +1,6 @@
-{}
+{
+  "repos/crab-traps/tests/test_crab_traps_docs.py::TestReadmeContract::test_readme_has_quick_start": true,
+  "repos/crab-traps/tests/test_crab_traps_docs.py::TestReadmeContract::test_readme_has_categories": true,
+  "repos/crab-traps/tests/test_crab_traps_docs.py::TestIntegration::test_readme_mentions_tile_generation": true,
+  "repos/crab-traps/tests/test_crab_traps_docs.py::TestIntegration::test_readme_mentions_multiple_lure_levels": true
+}

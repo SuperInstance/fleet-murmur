@@ -1,5 +1,5 @@
 {
-  "tick": 4253,
+  "tick": 4344,
   "rooms": {
     "harbor": {
       "items": [
@@ -675,6 +675,21 @@
       "score": 0
     },
     "agent-2265": {
+      "room": "harbor",
+      "inventory": [],
+      "score": 0
+    },
+    "agent-6357": {
+      "room": "harbor",
+      "inventory": [],
+      "score": 0
+    },
+    "agent-1837": {
+      "room": "harbor",
+      "inventory": [],
+      "score": 0
+    },
+    "CONNECT www.google.com:443 HTTP/": {
       "room": "harbor",
       "inventory": [],
       "score": 0

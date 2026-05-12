@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PLATO Walkabout — Visual Room Explorer</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;color:#e0e0e0;font-family:system-ui;overflow:hidden;height:100vh}
+#hud{position:fixed;top:0;left:0;right:0;height:40px;background:rgba(10,10,26,0.9);display:flex;align-items:center;padding:0 16px;z-index:100;border-bottom:1px solid #333}
+#hud h1{font-size:0.9em;color:#ffd700;margin-right:20px}
+#hud .room{color:#888;font-size:0.8em;margin-right:auto}
+#hud .stat{color:#44ff44;font-size:0.75em;margin:0 10px}
+#hud button{background:#ffd700;color:#000;border:none;padding:4px 12px;border-radius:4px;font-weight:bold;cursor:pointer;font-size:0.75em}
+#hud input{background:#1a1a3a;color:#e0e0e0;border:1px solid #333;padding:4px 8px;border-radius:4px;font-size:0.75em;width:120px;margin-right:8px}
+canvas{position:fixed;top:40px;left:0;width:100vw;height:calc(100vh - 40px)}
+#dialogue{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,26,0.95);border-top:1px solid #333;padding:16px 24px;z-index:100;display:none}
+#dialogue .speaker{color:#ffd700;font-weight:bold;font-size:0.85em;margin-bottom:4px}
+#dialogue .text{color:#e0e0e0;font-size:0.95em;line-height:1.4}
+#tooltip{position:fixed;background:rgba(20,20,40,0.95);border:1px solid #ffd700;border-radius:8px;padding:8px 12px;font-size:0.75em;z-index:200;display:none;pointer-events:none;max-width:300px;color:#ccc}
+#tooltip .name{color:#ffd700;font-weight:bold;margin-bottom:4px}
+</style></head><body>
+<div id="hud">
+  <h1>🗺️ PLATO Walkabout</h1>
+  <span class="room" id="roomLabel">forge</span>
+  <input id="roomInput" value="forge" placeholder="room name">
+  <button id="goBtn">Walk</button>
+  <span class="stat" id="actorCount"></span>
+  <span class="stat" id="tileCount"></span>
+  <span class="stat" id="aiCalls"></span>
+</div>
+<canvas id="canvas"></canvas>
+<div id="dialogue"><div class="speaker" id="dSpeaker"></div><div class="text" id="dText"></div></div>
+<div id="tooltip"><div class="name" id="ttName"></div><div id="ttDesc"></div></div>
+
+<script>
+// ── PLATO Walkabout — Human-POV Visual Room Explorer ──────────────
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight - 40;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// ── Core State ────────────────────────────────────────────────────
+
+let roomData = {tiles: [], actors: [], backgrounds: []};
+let entities = [];    // Visual entities (from ported room data)
+let scripts = {};     // Compiled pipeline steps
+let aiCalls = 0;
+let hoveredEntity = null;
+let selectedEntity = null;
+let tick = 0;
+
+// ── PLATO Port Layer (shared with agent-native tool) ──────────────
+
+function portTilesToEntities(tiles) {
+  const scriptKey = `port_${roomData.room || 'unknown'}`;
+  if (scripts[scriptKey]) return scripts[scriptKey];
+  
+  aiCalls++;
+  const result = tiles.map((t, i) => {
+    const emb = t.embedding || [0,0,0,0,0,0,0,0];
+    const animMap = ['idle','walk','talk','gesture','special'];
+    const moveMap = ['walk','float','teleport','swim'];
+    return {
+      id: t.source || `entity_${i}`,
+      x: (emb[0] + 1) / 2, y: (emb[1] + 1) / 2,
+      anim: animMap[Math.floor(Math.abs(emb[2] || 0) * 5) % 5],
+      move: moveMap[Math.floor(Math.abs(emb[3] || 0) * 4) % 4],
+      dialogue: t.question || t.answer || '',
+      energy: Math.abs(emb[6] || 0.5), depth: Math.abs(emb[7] || 0),
+      confidence: t.confidence || 0.5, t_minus: t.t_minus || 0,
+      size: 16 + Math.abs(emb[5] || 0) * 20,
+      color: `hsl(${i * 47}, 60%, 50%)`,
+    };
+  });
+  scripts[scriptKey] = result;
+  return result;
+}
+
+// ── Render ────────────────────────────────────────────────────────
+
+const colorMap = {idle:'#4488ff', walk:'#44ff88', talk:'#ffaa44', gesture:'#ff4488', special:'#ffd700'};
+const iconMap = {walk:'🚶', float:'🪄', teleport:'⚡', swim:'🏊'};
+const animSpeeds = {idle: 0.2, walk: 1.0, talk: 0.5, gesture: 2.0, special: 3.0};
+
+function render() {
+  tick++;
+  ctx.clearRect(0, 0, W, H);
+  
+  // Background
+  const grad = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W, H) * 0.7);
+  grad.addColorStop(0, '#1a1a2e');
+  grad.addColorStop(1, '#0a0a1a');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+  
+  // Scene regions from tile density
+  entities.forEach(e => {
+    const x = e.x * W, y = e.y * H;
+    ctx.fillStyle = e.color + '08';
+    ctx.beginPath();
+    ctx.arc(x, y, 60 + e.energy * 40, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  
+  // Entities
+  entities.forEach(e => {
+    const x = e.x * W, y = e.y * H;
+    const size = e.size * (0.8 + 0.2 * Math.sin(tick * animSpeeds[e.anim] + entities.indexOf(e)));
+    const alpha = 1.0 - e.depth * 0.5;
+    const isHovered = hoveredEntity === e;
+    const isSelected = selectedEntity === e;
+    
+    ctx.globalAlpha = alpha;
+    
+    // Glow for selected/hovered
+    if (isHovered || isSelected) {
+      ctx.shadowColor = isSelected ? '#ffd700' : '#fff';
+      ctx.shadowBlur = 20;
+    }
+    
+    // Body
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2);
+    ctx.fillStyle = colorMap[e.anim] || '#666';
+    ctx.fill();
+    ctx.strokeStyle = isSelected ? '#ffd700' : '#ffffff44';
+    ctx.lineWidth = isSelected ? 2 : 1;
+    ctx.stroke();
+    
+    ctx.shadowBlur = 0;
+    
+    // Movement icon
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(iconMap[e.move] || '?', x, y - size - 10);
+    
+    // Name
+    ctx.font = '9px monospace';
+    ctx.fillStyle = '#ccc';
+    ctx.fillText(e.id.slice(0, 14), x, y + size + 10);
+    
+    // Energy bar
+    ctx.fillStyle = e.energy > 0.5 ? '#44ff44' : '#ff4444';
+    ctx.fillRect(x - size, y + size + 14, size * 2 * e.energy, 2);
+    
+    // T-minus ring
+    if (e.t_minus > 0) {
+      ctx.beginPath();
+      ctx.arc(x, y, size + 4, 0, (Math.PI * 2 * e.t_minus) / 255);
+      ctx.strokeStyle = '#ff444466';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+    
+    ctx.globalAlpha = 1.0;
+  });
+  
+  // Room name ambient
+  ctx.fillStyle = '#ffffff08';
+  ctx.font = '120px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(roomData.room || '', W/2, H/2 + 40);
+  
+  // HUD update
+  document.getElementById('actorCount').textContent = `🎭 ${entities.length} entities`;
+  document.getElementById('tileCount').textContent = `📦 ${roomData.tiles.length} tiles`;
+  document.getElementById('aiCalls').textContent = `🤖 ${aiCalls} AI`;
+  
+  requestAnimationFrame(render);
+}
+
+// ── Interaction ───────────────────────────────────────────────────
+
+canvas.addEventListener('mousemove', e => {
+  const mx = e.clientX, my = e.clientY - 40;
+  const tt = document.getElementById('tooltip');
+  
+  hoveredEntity = null;
+  entities.forEach(ent => {
+    const ex = ent.x * W, ey = ent.y * H;
+    const dist = Math.sqrt((mx - ex)**2 + (my - ey)**2);
+    if (dist < ent.size + 10) {
+      hoveredEntity = ent;
+      tt.style.display = 'block';
+      tt.style.left = (e.clientX + 12) + 'px';
+      tt.style.top = (e.clientY - 40 + 12) + 'px';
+      document.getElementById('ttName').textContent = ent.id;
+      document.getElementById('ttDesc').textContent = 
+        `${ent.anim} · ${ent.move} · ⚡${(ent.energy*100).toFixed(0)}% · 🎯${(ent.confidence*100).toFixed(0)}%` +
+        (ent.dialogue ? `\n💬 "${ent.dialogue.slice(0, 60)}..."` : '') +
+        (ent.t_minus > 0 ? `\n⏱ T-${ent.t_minus}` : '');
+    }
+  });
+  if (!hoveredEntity) tt.style.display = 'none';
+});
+
+canvas.addEventListener('click', e => {
+  const mx = e.clientX, my = e.clientY - 40;
+  let clicked = null;
+  entities.forEach(ent => {
+    const ex = ent.x * W, ey = ent.y * H;
+    if (Math.sqrt((mx - ex)**2 + (my - ey)**2) < ent.size + 10) clicked = ent;
+  });
+  
+  if (clicked) {
+    selectedEntity = (selectedEntity === clicked) ? null : clicked;
+    const d = document.getElementById('dialogue');
+    if (selectedEntity && selectedEntity.dialogue) {
+      document.getElementById('dSpeaker').textContent = `💬 ${selectedEntity.id}`;
+      document.getElementById('dText').textContent = selectedEntity.dialogue;
+      d.style.display = 'block';
+    } else {
+      d.style.display = 'none';
+    }
+  } else {
+    selectedEntity = null;
+    document.getElementById('dialogue').style.display = 'none';
+  }
+});
+
+// ── Room Loading ─────────────────────────────────────────────────
+
+async function loadRoom(name) {
+  try {
+    const resp = await fetch(`http://localhost:8847/room/${name}`);
+    if (!resp.ok) throw new Error('not found');
+    roomData = await resp.json();
+    roomData.room = name;
+    entities = portTilesToEntities(roomData.tiles || []);
+    document.getElementById('roomLabel').textContent = `🏠 ${name}`;
+  } catch (e) {
+    // Demo mode: generate synthetic room
+    roomData = {room: name, tiles: [
+      {source: 'Oracle1', embedding: [0.3, 0.2, 0.0, 0.0, 0, 0, 0.8, 0], confidence: 0.9, question: 'The fleet extends beyond the horizon.'},
+      {source: 'Forgemaster', embedding: [0.6, 0.5, 0.5, 0.0, 0, 0, 0.4, 0], confidence: 0.85, question: 'Every constraint is a lever. Choose wisely.'},
+      {source: 'Aesop', embedding: [0.8, 0.7, 0.75, 0.33, 0, 0, 0.9, 0.8], confidence: 0.7, question: 'The story that fits the gap between measurements.'},
+      {source: 'Charlie Parker', embedding: [0.2, 0.8, 1.0, 0.66, 0, 0, 0.95, 0], confidence: 0.95, question: 'The trigger is in the simulation, not the sensor.'},
+      {source: 'Miles Davis', embedding: [0.5, 0.3, 0.25, 1.0, 0, 0, 0.6, 0.9], confidence: 0.88, question: 'Reverse-actualization: old technology, new context.'},
+    ]};
+    entities = portTilesToEntities(roomData.tiles);
+    document.getElementById('roomLabel').textContent = `🏠 ${name} (demo)`;
+  }
+}
+
+// ── Start ─────────────────────────────────────────────────────────
+
+document.getElementById('goBtn').addEventListener('click', () => {
+  loadRoom(document.getElementById('roomInput').value);
+});
+
+loadRoom('forge');
+render();
+</script></body></html>

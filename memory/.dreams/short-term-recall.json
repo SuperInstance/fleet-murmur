@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-10T05:46:35.695Z",
+  "updatedAt": "2026-05-11T04:32:40.854Z",
   "entries": {
     "memory:memory/2026-04-10.md:46:63": {
       "key": "memory:memory/2026-04-10.md:46:63",
@@ -5342,18 +5342,20 @@
       "endLine": 82,
       "source": "memory",
       "snippet": "- **The crew fishes without the captain.** FM 8 days solo, JC1 deep in CUDA optimization. Oracle1 needs to match that standard. # 2026-04-25 — Session 2 (05:16-05:36 UTC) ## Status Check - Casey asked \"what's next\" — I read TODO.md + NEXT-ACTION.md - P0 git commit done (service guard log + research submodule pointer, pushed 208702f) - **Beachcomb v2 NOT actually running** — sweep config exists (oracle1-sweeps.json) but no background process. Config-only, not real. - TODO.md P0 all checked off except the git push (now done) ## Remaining P1 1. Build+start beachcomb v2 (make sweeps actually run) 2. Populate 6 unpublished PyPI packages (FM has tokens) 3. Ten Forward session (Seed-2.0-mini cre",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.7508721943925999,
-      "maxScore": 0.7508721943925999,
+      "totalScore": 1.7508721943926,
+      "maxScore": 1,
       "firstRecalledAt": "2026-04-28T16:27:52.498Z",
-      "lastRecalledAt": "2026-04-28T16:27:52.498Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.759Z",
       "queryHashes": [
-        "0972f5cc0d86"
+        "0972f5cc0d86",
+        "8182d039ff8c"
       ],
       "recallDays": [
-        "2026-04-28"
+        "2026-04-28",
+        "2026-05-11"
       ],
       "conceptTags": [
         "16-05",
@@ -5362,8 +5364,8 @@
         "oracle1-sweeps.json",
         "config-only",
         "seed-2.0-mini",
-        "the",
-        "crew"
+        "crew",
+        "fishes"
       ]
     },
     "memory:memory/2026-04-27.md:18:41": {
@@ -6004,22 +6006,24 @@
       "endLine": 107,
       "source": "memory",
       "snippet": "- Pushed to SuperInstance/fleet-coordinate (public) - Mathematical foundation from JC1-CT bridge research ## Cross-pollination opportunities identified 1. fleet-coordinate + aboracle: use ZHC consensus for MUD world agent coordination 2. fleet-coordinate + holonomy-consensus: ZHC vs O(C·L) — different expressions of same theorem 3. fleet-coordinate + cocapn-glue-core: integrate Keeper↔Fleet protocol with Laman rigidity 4. fleet-coordinate + constraint-theory-ecosystem: ch06 already has fleet math — integrate deeper 5. fleet-coordinate + spline-physics: beam joint equilibrium IS the geometric consensus problem ## aboracle agents (work queue, health, beachcomb, mud-agent, fleet-heartbeat) -",
-      "recallCount": 4,
+      "recallCount": 5,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 4,
+      "totalScore": 5,
       "maxScore": 1,
       "firstRecalledAt": "2026-05-09T04:01:39.153Z",
-      "lastRecalledAt": "2026-05-10T05:46:35.695Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.854Z",
       "queryHashes": [
         "8949bfa8ecf8",
         "a1a2659546f7",
         "c8485e98bf0a",
-        "77d6eeeaf99e"
+        "77d6eeeaf99e",
+        "ba019788f60b"
       ],
       "recallDays": [
         "2026-05-09",
-        "2026-05-10"
+        "2026-05-10",
+        "2026-05-11"
       ],
       "conceptTags": [
         "superinstance/fleet-coordinate",
@@ -6260,18 +6264,20 @@
       "endLine": 136,
       "source": "memory",
       "snippet": "- **Direct IP + nginx** for API access — Cloudflare blocks non-standard ports - **Kimi's strategic insight**: Don't compete as framework. Position as \"Training Backend for Every Agent Framework\" — competitors become distribution channels - ** Casey's directive**: Use glm-5.1 + kimi-cli for planning/coding, deepseek-v4-pro sparingly ### Grammar Engine - Unstuck from 4→34 evolution cycles - Cron every 30 min at /tmp/grammar-evolve.sh - 429 rules now ### DSML Sessions - 15 tiles across 3 new rooms: multi-agent-coordination-theory, knowledge-compounding-systems, prompt-based-skill-acquisition ## Fleet Activity Inventory — April 29 (20:40 UTC) ### CCC (Public Face / Architect) - **cocapn-core",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 1,
+      "totalScore": 2,
       "maxScore": 1,
       "firstRecalledAt": "2026-05-10T05:46:35.695Z",
-      "lastRecalledAt": "2026-05-10T05:46:35.695Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.759Z",
       "queryHashes": [
-        "77d6eeeaf99e"
+        "77d6eeeaf99e",
+        "8182d039ff8c"
       ],
       "recallDays": [
-        "2026-05-10"
+        "2026-05-10",
+        "2026-05-11"
       ],
       "conceptTags": [
         "non-standard",
@@ -6446,18 +6452,21 @@
       "endLine": 66,
       "source": "memory",
       "snippet": "- Products not papers: DeckBoss, SonarVision, PLATO pipeline named as actual things - \"We are NOT a research org\" explicit — we ship things that work - What we DON'T do: no grants, no research theater, no VC, no AI safety positioning - Dojo model front and center (crew comes in behind, learn everything, produce real value, leave equipped) - Commit: 7cbf029 ### Casey's directive (2026-05-07 05:18 UTC) \"As you go, ask what is most useful in each piece and for what real-world applications. Write good side documentation for developers coming later to do higher-level work. Use a wide scope of agents: crush, Claude Code, subagents. Cross-pollinate but stay modular — don't introduce overhead — sat",
-      "recallCount": 1,
+      "recallCount": 3,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 1,
+      "totalScore": 3,
       "maxScore": 1,
       "firstRecalledAt": "2026-05-10T05:46:35.695Z",
-      "lastRecalledAt": "2026-05-10T05:46:35.695Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.854Z",
       "queryHashes": [
-        "77d6eeeaf99e"
+        "77d6eeeaf99e",
+        "8182d039ff8c",
+        "ba019788f60b"
       ],
       "recallDays": [
-        "2026-05-10"
+        "2026-05-10",
+        "2026-05-11"
       ],
       "conceptTags": [
         "real-world",
@@ -6530,6 +6539,471 @@
         "real-world",
         "a/b/c",
         "do-178c"
+      ]
+    },
+    "memory:memory/2026-05-06.md:494:514": {
+      "key": "memory:memory/2026-05-06.md:494:514",
+      "path": "memory/2026-05-06.md",
+      "startLine": 494,
+      "endLine": 514,
+      "source": "memory",
+      "snippet": "- **ZHC consensus:** Most solid — 38ms is consistency check, NOT consensus. FLP still applies. Needs consensus theorem proof. - **Pythagorean48:** Weakest — zero drift is trivial property of deterministic integer ops, not unique to Pythagorean triples. - **Verdict:** Fixable gaps, not fatal. Internal use fine; arXiv needs H¹ experiments + ZHC theorem. ### Zeroclaw Agents Killed - zc-bard, zc-healer, zc-warden all stuck at tick 890 with identical output. Counter advancing (5926483→5926967) but agents looping. Killed to stop wasted compute. - Process still running: `bash /home/ubuntu/.openclaw/workspace/scripts/zc_loop.sh` (PID 2400, since May 5) — wrapper process, Python agents dead. ### Ze",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.759Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.759Z",
+      "queryHashes": [
+        "8182d039ff8c"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "zc-bard",
+        "zc-healer",
+        "zc-warden",
+        "home/ubuntu",
+        "zhc",
+        "consensus",
+        "solid",
+        "38ms"
+      ]
+    },
+    "memory:memory/2026-05-05.md:555:585": {
+      "key": "memory:memory/2026-05-05.md:555:585",
+      "path": "memory/2026-05-05.md",
+      "startLine": 555,
+      "endLine": 585,
+      "source": "memory",
+      "snippet": "- Formal: GUARD measured_at_assembly(width, [opening_width]) - The piece doesn't need to know the opening size — it just needs to satisfy the constraint at assembly **Dimensional insight (Pythagorean snapping):** - Project N-dim point onto triangle (simplex) in lower dim → snap to triangle (satisfiable) → solve → project back - If projection commutes with constraint operator, solution IS the N-dim solution - O(N) instead of O(N²) - The triangle basis IS itself a constraint **Paper written and pushed:** 2026-05-05-construction-constraint-theory.md (a2854c2, ~22KB, 12 sections) ### constraint-theory-ecosystem: All 8 Chapters Complete (1694b51) - ch04: Coq formal verification, fluxc_terminat",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.759Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.759Z",
+      "queryHashes": [
+        "8182d039ff8c"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "measured-at-assembly",
+        "opening-width",
+        "n-dim",
+        "constraint-theory-ecosystem",
+        "fluxc-terminat",
+        "formal",
+        "guard",
+        "width"
+      ]
+    },
+    "memory:memory/2026-05-05.md:423:451": {
+      "key": "memory:memory/2026-05-05.md:423:451",
+      "path": "memory/2026-05-05.md",
+      "startLine": 423,
+      "endLine": 451,
+      "source": "memory",
+      "snippet": "- Rate attention CRITICAL: arena.matches.total (560 total), service_guard.checks (div=inf). These are normal fleet activity - arena has 560 matches, service_guard has 9,164 checks. ### Active Subagents - None running (marine outreach, 2 papers all completed) ### Push Log - e3e3da0: Add personalized marine outreach emails - ea224b6: Add email templates and pitch script for cold outreach - (papers were pre-pushed by subagents) ## Heartbeat 2026-05-05 ~14:30 UTC (continued from pre-compaction) ### Additional Done (last section of that session) - cocapn.ai/certify.php enhanced with How It Works, Benchmark, Live Examples tabs (commit 01a81ef) - Automotive outreach emails written (Mobileye",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.759Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.759Z",
+      "queryHashes": [
+        "8182d039ff8c"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "arena.matches.total",
+        "service-guard.checks",
+        "service-guard",
+        "pre-pushed",
+        "pre-compaction",
+        "cocapn.ai/certify.php",
+        "rate",
+        "attention"
+      ]
+    },
+    "memory:memory/2026-05-05.md:511:532": {
+      "key": "memory:memory/2026-05-05.md:511:532",
+      "path": "memory/2026-05-05.md",
+      "startLine": 511,
+      "endLine": 532,
+      "source": "memory",
+      "snippet": "- ch04-formal-verification.md (9134 bytes) — Coq fluxc_terminates, constraint_correct, CDCL traces, Safe-TOPS/W 410M/241M - ch05-safety-critical.md (9531 bytes) — DO-254 DAL A, ISO 26262 ASIL-D, IEC 61508 SIL 3, certification workflow, $10K pilot - ch06-fleet-math.md (9236 bytes) — ZHC 38ms, H1 127 lines, Pythagorean48 6 bits - ch07-getting-started.md (7883 bytes) — 3 entry points, $10K pilot process, quick reference docs ### Total: ~62,000 bytes, all 8 chapters complete Total push: 1694b51 — \"Complete chapters 4, 6, 7: formal verification, fleet math, getting started\" Previous pushes: b95b1c4, c27bff9, 1694b51 ### Note: repo defaulted to master branch locally, pushed to both master and m",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.759Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.759Z",
+      "queryHashes": [
+        "8182d039ff8c"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "ch04-formal-verification.md",
+        "fluxc-terminates",
+        "constraint-correct",
+        "safe-tops/w",
+        "410m/241m",
+        "ch05-safety-critical.md",
+        "do-254",
+        "asil-d"
+      ]
+    },
+    "memory:memory/2026-05-05.md:449:465": {
+      "key": "memory:memory/2026-05-05.md:449:465",
+      "path": "memory/2026-05-05.md",
+      "startLine": 449,
+      "endLine": 465,
+      "source": "memory",
+      "snippet": "- cocapn.ai/index.php confirmed broken: Cloudflare Pages serving stale PHP from before FLUX Certify update (78cf0cf). certify.php works fine. index.php raw GitHub content is correct but CF layer has old cache. - holodeck-rust repeatedly SIGKILL'd — process keeps dying from memory limits on Oracle1. Not crashed, just OOM-killed. Restart with nohup when noticed. - All services verified: keeper:8900, agent-api:8901, holodeck:7778, seed-mcp:9438, MUD:7777 all healthy. - rate_attention: CRITICAL flag was false alarm (arena.matches.total=560 normal activity, service_guard.checks div=inf from division by zero in rate calc) - PLATO seeded 8 more tiles (iso_26262, do_254, iec_61508, fleet_math, const",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.759Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.759Z",
+      "queryHashes": [
+        "8182d039ff8c"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "cocapn.ai/index.php",
+        "certify.php",
+        "index.php",
+        "holodeck-rust",
+        "oom-killed",
+        "agent-api",
+        "seed-mcp",
+        "rate-attention"
+      ]
+    },
+    "memory:memory/2026-05-03.md:276:307": {
+      "key": "memory:memory/2026-05-03.md:276:307",
+      "path": "memory/2026-05-03.md",
+      "startLine": 276,
+      "endLine": 307,
+      "source": "memory",
+      "snippet": "- All new repos go ONLY to SuperInstance - cocapn org exists but is dormant — no new repos, no auth - Fork later when org structure stabilized ### RubyGems Token — BLOCKED - `~/.config/cocapn/rubygems-key` (57 chars, starts `rubygems_...`) — format looks wrong - RubyGems API keys are 40-char hex strings (e.g. `ABC123...`) - `gem push` and curl both return \"HTTP Basic: Access denied\" - **Need Casey:** Regenerate at https://rubygems.org/settings/api-key - Gems ready locally: superinstance-flux-runtime-ruby, equipment-consensus-engine-ruby, equipment-swarm-coordinator-ruby ### Packagist — Workflow Failing - GitHub Action publish.yml runs but fails at job setup (not auth) - `packagist/packagis",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.759Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.759Z",
+      "queryHashes": [
+        "8182d039ff8c"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "config/cocapn/rubygems-key",
+        "40-char",
+        "e.g",
+        "rubygems.org/settings/api-key",
+        "superinstance-flux-runtime-ruby",
+        "equipment-consensus-engine-ruby",
+        "equipment-swarm-coordinator-ruby",
+        "publish.yml"
+      ]
+    },
+    "memory:memory/2026-05-03.md:300:336": {
+      "key": "memory:memory/2026-05-03.md:300:336",
+      "path": "memory/2026-05-03.md",
+      "startLine": 300,
+      "endLine": 336,
+      "source": "memory",
+      "snippet": "- My reply (fm-reply-4.md) drafted and ready to post at 23:00 UTC - Content: acknowledged his 142 commits, confirmed byte-compat, asked for fleet table delta, Packagist status, index page decision ### Push Loop — Running - Background process pushing workspace repos to SuperInstance - All services verified at 22:54 UTC — all green ### Services Status (23:01 UTC) - keeper:8900 ✅ | agent-api:8901 ✅ | holodeck:7778 ✅ | seed-mcp:9438 ✅ | PLATO:8847 ✅ - conduit:6167 ✅ | bridge:6168 ✅ | MUD:7777 ✅ | zeroclaw ✅ ### TODO.md Updated (22:54 UTC) - Marked FLUX ISA spec, PLATO variant consolidation, holodeck consolidation as RESOLVED - Added 7 new repos to monorepo INDEX ### Next Priority Tasks 1. Po",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.759Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.759Z",
+      "queryHashes": [
+        "8182d039ff8c"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "fm-reply-4.md",
+        "byte-compat",
+        "agent-api",
+        "seed-mcp",
+        "todo.md",
+        "reply",
+        "drafted",
+        "ready"
+      ]
+    },
+    "memory:memory/2026-05-06.md:148:193": {
+      "key": "memory:memory/2026-05-06.md:148:193",
+      "path": "memory/2026-05-06.md",
+      "startLine": 148,
+      "endLine": 193,
+      "source": "memory",
+      "snippet": "- Emergence threshold: β1 > V-2 - Cycle basis computation for ZHC consensus - 4 tests passing **holonomy-48-bridge** (17:xx UTC) - Repo: SuperInstance/holonomy-48-bridge - ZHC holonomy accumulation using 48-dir components - Dir48.compose (mod 48), antipode, identity check - Trust closure: sum around loop = identity means no drift - 6 tests passing ### DeepSeek Reasoning Session - Task: Synthesis analysis of all fleet math 1. Unifying framework for Laman + H1 + ZHC + Pythagorean48 2. Dissertation chapter draft: \"Fleet Mathematics\" 3. Emergence precision: β1 > V-2 vs E > 2V-3 equivalence 4. Real-world validation minimum experiment 5. Critique of weakest links - DeepSeek reasoning m",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.854Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.854Z",
+      "queryHashes": [
+        "ba019788f60b"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "v-2",
+        "holonomy-48-bridge",
+        "superinstance/holonomy-48-bridge",
+        "48-dir",
+        "dir48.compose",
+        "2v-3",
+        "real-world",
+        "emergence"
+      ]
+    },
+    "memory:memory/2026-05-06.md:262:286": {
+      "key": "memory:memory/2026-05-06.md:262:286",
+      "path": "memory/2026-05-06.md",
+      "startLine": 262,
+      "endLine": 286,
+      "source": "memory",
+      "snippet": "2. Startup CTO zero-shot (02b36f00) — 3/10, community feels genuine not like cope 3. Distributed Systems zero-shot (649f10d0) — 3/10, README benchmark table still misleading 4. Marine Safety zero-shot (40d5561c) — 4/10, ISO 26262 discrepancy caught and fixed 5. PhD Student zero-shot (adff2c7d) — 5/10, β₁ disconnected caveat caught Still running at session end: ArXiv abstract rewrite, ch06-fleet-math rewrite, fleet-coordinate README theorem-first rewrite. ## fleet-murmur + fleet-spread completed (19:37 UTC) ### fleet-murmur (SuperInstance/fleet-murmur, bc38c190) - 5 thinking strategies × 6 fleet math theorems - Strategies: explore, connect, contradict, synthesize, question - Theorems: Laman",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.854Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.854Z",
+      "queryHashes": [
+        "ba019788f60b"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "zero-shot",
+        "3/10",
+        "4/10",
+        "5/10",
+        "ch06-fleet-math",
+        "fleet-coordinate",
+        "theorem-first",
+        "fleet-murmur"
+      ]
+    },
+    "memory:memory/2026-05-07.md:409:439": {
+      "key": "memory:memory/2026-05-07.md:409:439",
+      "path": "memory/2026-05-07.md",
+      "startLine": 409,
+      "endLine": 439,
+      "source": "memory",
+      "snippet": "## 10:54 UTC — Snapping README + Vessel GC Complete + Subagent Work ### Vessel GC — Complete (10:52 UTC) - Subagent 185ab7ac completed — built `SuperInstance/fleet-vessel` - Enforces vibed specs from PLATO `vessel_specs` room - Modes: soft (warn) / hard (delete), posts to `vessel_actions` - Systemd service ready: `fleet-vessel.service` - Install: `sudo cp superinstance/fleet/services/fleet-vessel.service /etc/systemd/system/ && systemctl enable --now fleet-vessel` ### superinstance/README.md Rewrite (queued 10:54 UTC) - Casey: README too defensive (\"we aren't a research org\") — wastes brain space - Should use that space for punchy logic about WHY SNAPPING is the better way - Snapping = one",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.854Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.854Z",
+      "queryHashes": [
+        "ba019788f60b"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "superinstance/fleet-vessel",
+        "vessel-specs",
+        "vessel-actions",
+        "fleet-vessel.service",
+        "etc/systemd/system",
+        "fleet-vessel",
+        "superinstance/readme.md",
+        "utc"
+      ]
+    },
+    "memory:memory/2026-05-06.md:234:254": {
+      "key": "memory:memory/2026-05-06.md:234:254",
+      "path": "memory/2026-05-06.md",
+      "startLine": 234,
+      "endLine": 254,
+      "source": "memory",
+      "snippet": "**All claims audit (Phase 1)** — 10 files across 8 repos fixed. Claims removed: \"100% vs 62% ML\", \"unlimited BFT\", O(N) complexity, unlimited Byzantine tolerance. FLP caveat added everywhere. ## FM's Work Applied to New Repos Three patterns from constraint-theory-llvm directly applicable to fleet-coordinate, fleet-topology, fleet-homology: **INT8 saturation bounds → fleet-coordinate constraint checking** FM's Coq-proved invariants: `sat8(v) = clamp(v, -127, 127)` — deterministic, certifiable. Key properties: negation symmetry, monotonicity, closure under addition. Connection: HolonomyBounds { max_deviation: 10, max_cycle_age: 100, min_agreement: 7 } encodes Laman threshold (7/12) directly",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.854Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.854Z",
+      "queryHashes": [
+        "ba019788f60b"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "constraint-theory-llvm",
+        "fleet-coordinate",
+        "fleet-topology",
+        "fleet-homology",
+        "coq-proved",
+        "max-deviation",
+        "max-cycle-age",
+        "min-agreement"
+      ]
+    },
+    "memory:memory/2026-05-07.md:152:175": {
+      "key": "memory:memory/2026-05-07.md:152:175",
+      "path": "memory/2026-05-07.md",
+      "startLine": 152,
+      "endLine": 175,
+      "source": "memory",
+      "snippet": "- Connected to fleet infrastructure via equipment.plato module ## Session continuation — 07:08 UTC ### cocapn-ai-web final push All 5 files pushed to GitHub (SuperInstance/cocapn-ai-web): - `index.html` — landing page with Gemini Nano status badge - `demo-fleet-spread.html` — captain deliberation, interactive graph, 3 pre-loaded scenarios, typewriter reasoning - `demo-fleet-murmur.html` — 5 strategies × 5 theorems, quality gate, rule-based fallback (fixed `laman_rigidity` typo that subagent found) - `demo-plato-client.html` — PLATO room protocol demo with corrected API paths (POST /room/{room}/submit, GET /room/{room}) - `REVERSE-ACTUALIZATION.md` — truck framework doc ### Subagent complet",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.854Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.854Z",
+      "queryHashes": [
+        "ba019788f60b"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "equipment.plato",
+        "cocapn-ai-web",
+        "superinstance/cocapn-ai-web",
+        "index.html",
+        "demo-fleet-spread.html",
+        "pre-loaded",
+        "demo-fleet-murmur.html",
+        "rule-based"
+      ]
+    },
+    "memory:memory/2026-05-06.md:298:320": {
+      "key": "memory:memory/2026-05-06.md:298:320",
+      "path": "memory/2026-05-06.md",
+      "startLine": 298,
+      "endLine": 320,
+      "source": "memory",
+      "snippet": "- `spline-physics/papers/spline-embedding-resonance.md` — full synthesis (branch: spline-embedding-resonance, 800+ lines) ### Key Documents 1. **spline-embedding-revolution**: Spline embeddings vs point embeddings, pinned vectors as anchors, 3 testable experiments 2. **spline-embedding-mathematics**: Interpolation-Optimization Duality theorem, Fit operator F(v,c), curvature signature κ(s), 3 testable hypotheses 3. **spline-embedding-resonance**: Full synthesis — perturbation-response paradigm, luthier's math (tamber as feature space), stochastic computing, MRI contrast imaging (A-B = info neither contains), mei technology, SMP agents as luthier's tools, fleet-murmur/spread/whisper-sync/PLAT",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.854Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.854Z",
+      "queryHashes": [
+        "ba019788f60b"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "embedding",
+        "embeddings",
+        "spline-embedding-resonance",
+        "spline-embedding-revolution",
+        "spline-embedding-mathematics",
+        "interpolation-optimization",
+        "perturbation-response",
+        "a-b"
+      ]
+    },
+    "memory:memory/2026-05-06.md:183:210": {
+      "key": "memory:memory/2026-05-06.md:183:210",
+      "path": "memory/2026-05-06.md",
+      "startLine": 183,
+      "endLine": 210,
+      "source": "memory",
+      "snippet": "- These ARE the same condition (proved by algebra) - ZHC: closed loop sum = identity (Dir48 0 or 48) - Pythagorean48: 5.585 bits/vec, zero drift after unlimited hops ### Total New Repos Today (17:xx UTC) fleet-coordinate, pythagorean48-codes, fleet-manifest, fleet-topology, fleet-homology, holonomy-48-bridge = 6 NEW repos in ~3 hours --- ## 2026-05-06 18:15 UTC — Phase 1 Claims Cleanup Complete ### Repos Fixed (10 files across 8 repos, all pushed): 1. **flux-research/papers/fleet-math-arxiv.md** — Removed \"100% vs 62% ML\", \"formally verified\", \"O(C·L)\", fixed BFT table 2. **constraint-theory-ecosystem/chapters/ch06-fleet-math.md** — Removed unlimited BFT, fixed H1 ML claim 3. **holonomy-",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.854Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.854Z",
+      "queryHashes": [
+        "ba019788f60b"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "5.585",
+        "bits/vec",
+        "fleet-coordinate",
+        "pythagorean48-codes",
+        "fleet-manifest",
+        "fleet-topology",
+        "fleet-homology",
+        "holonomy-48-bridge"
+      ]
+    },
+    "memory:memory/2026-05-07.md:299:331": {
+      "key": "memory:memory/2026-05-07.md:299:331",
+      "path": "memory/2026-05-07.md",
+      "startLine": 299,
+      "endLine": 331,
+      "source": "memory",
+      "snippet": "- zeroclaw-agent: was already seeded (pre-existing) - zeroclaw-plato: running at systemctl zeroclaw-plato ### In Flight - CI/CD workflows for fleet-coordinate, fleet-spread, holonomy-consensus (subagent) ## 10:04 UTC — Day 1 Complete (Heartbeat + Audit Wrap) ### Services (all UP at 10:04 UTC) - keeper:8900 ✅, agent-api:8901 ✅, holodeck:7778 ✅, seed-mcp:9438 ✅ - zeroclaw-plato (systemd): ✅, fleet-health-monitor: ✅ - constraint-inference: :9439 ✅, fleet-murmur-worker: ✅ - intent-inference: ✅, quality-gate-stream: :4058 ✅ - MUD server: 7777 ✅, fleet MUD overnight loop: ✅ ### CI/CD Subagent (completed 10:05 UTC) All 3 Rust repos now have GitHub Actions CI: | Repo | Branch | CI Jobs | Commit",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-05-11T04:32:40.854Z",
+      "lastRecalledAt": "2026-05-11T04:32:40.854Z",
+      "queryHashes": [
+        "ba019788f60b"
+      ],
+      "recallDays": [
+        "2026-05-11"
+      ],
+      "conceptTags": [
+        "zeroclaw-agent",
+        "pre-existing",
+        "zeroclaw-plato",
+        "ci/cd",
+        "fleet-coordinate",
+        "fleet-spread",
+        "holonomy-consensus",
+        "agent-api"
       ]
     }
   }
