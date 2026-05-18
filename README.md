@@ -1,6 +1,8 @@
 # fleet-murmur
 
 
+![CI](https://github.com/SuperInstance/fleet-murmur/actions/workflows/ci.yml/badge.svg)
+
 ## Meta
 
 **Domain:** agent-coordination
