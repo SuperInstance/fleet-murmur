@@ -39,7 +39,13 @@ class TestGetTree(unittest.TestCase):
         deep.mkdir(parents=True)
         (deep / "file.txt").write_text("x")
         result = self.get_tree(str(self.tmpdir), max_depth=2)
-        self.assertNotIn("d", result)
+        # Check that depth-4 directory doesn't appear as a tree entry
+        # (avoid false positives from tmpdir name containing 'd')
+        lines = result.split('\n')
+        for line in lines:
+            stripped = line.strip()
+            if stripped in ('d/', 'd') or stripped.startswith('d/'):
+                self.fail(f"Deep directory 'd' should not appear at max_depth=2: {line}")
 
     def test_ignores_git(self):
         (self.tmpdir / ".git").mkdir()
