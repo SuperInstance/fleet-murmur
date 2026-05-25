@@ -15,6 +15,23 @@ import urllib.error
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
+import pytest
+
+
+def _services_available():
+    """Check if infrastructure services are reachable."""
+    try:
+        urllib.request.urlopen(f"{PLATO_URL}/status", timeout=2)
+        return True
+    except Exception:
+        return False
+
+
+skip_if_no_services = pytest.mark.skipif(
+    not _services_available(),
+    reason="Infrastructure services not available (CI environment)"
+)
+
 # ── Configuration ───────────────────────────────────────────────────────────
 
 PLATO_URL = "http://localhost:8847"
@@ -107,6 +124,7 @@ def plato_write_tile(room: str, question: str, answer: str, source: str = "test"
 # TESTS
 # ══════════════════════════════════════════════════════════════════════════════
 
+@skip_if_no_services
 class TestInfrastructure:
     """Test that all required services are running"""
 
@@ -165,6 +183,7 @@ class TestRoomInvariants:
                     assert "confidence" in t, f"Agent tile missing confidence"
 
 
+@skip_if_no_services
 class TestObjectPermanence:
     """Test T1: Object-permanence across sessions"""
 
@@ -213,6 +232,7 @@ class TestObjectPermanence:
         assert found, f"Written tile not found in forge: {test_question}"
 
 
+@skip_if_no_services
 class TestAgentRuntime:
     """Test A1, A2: Agent lives in PLATO, cycles produce tiles"""
 
@@ -241,6 +261,7 @@ class TestAgentRuntime:
         assert len(content) > 0, "Reason returned empty result"
 
 
+@skip_if_no_services
 class TestPortRegistry:
     """Test P1, P2: Claw registry with physics declarations"""
 
@@ -274,6 +295,7 @@ class TestPortRegistry:
             assert "strength" in claw, f"Claw {claw.get('name')} missing strength"
 
 
+@skip_if_no_services
 class TestTensionLoop:
     """Test the tension loop produces content"""
 
@@ -294,6 +316,7 @@ class TestTensionLoop:
         )
 
 
+@skip_if_no_services
 class TestMudBridge:
     """Test the MUD common space bridge"""
 
@@ -317,6 +340,7 @@ class TestMudBridge:
         )
 
 
+@skip_if_no_services
 class TestTerrainBridge:
     """Test the terrain bridge serves ScummVM scenes"""
 
@@ -334,6 +358,7 @@ class TestTerrainBridge:
         assert room.get("room", ""), "Terrain scene should have a room name"
 
 
+@skip_if_no_services
 class TestOneDeltaProgress:
     """Test O1: System is making progress (new tiles, active agents)"""
 
