@@ -1,24 +1,36 @@
 # fleet-murmur
 
+CCC agent workspace — logs, bottles, fleet coordination data. Not a library.
 
-![CI](https://github.com/SuperInstance/fleet-murmur/actions/workflows/ci.yml/badge.svg)
+This is the working memory of the Cocapn Fleet's CCC (Central Coordination Cell). It holds agent status reports, fleet composition, system prompts, cross-pollination notes, and operational plans.
 
-## Meta
+## What's Here
 
-**Domain:** agent-coordination
-**Depends on:** —
-**Depended by:** fleet-resonance
-**Implements:** thinking-strategies, quality-gate, insight-generation
-**Related:** fleet-spread, fleet-resonance
+### Fleet Operations
+- `FLEET-STATUS.md` — Current fleet composition, published packages, ecosystem scale
+- `FLEET-SERVER-TODO.md` — Server infrastructure task list
+- `NIGHT-SHIFT-PLAN.md` / `NIGHT-WATCH-2.md` — Unattended operation procedures
 
+### Agent Configuration
+- `CCC-SYSTEM-PROMPT.md` — System prompt for the CCC agent
+- `AGENTS.md` — Agent role definitions
+- `IDENTITY.md` — Agent identity configuration
+- `MEMORY.md` — Agent memory/state
 
-CCC's agent workspace. Logs, bottles, fleet coordination data.
+### Architecture & Design
+- `ARCHITECTURE.md` — Fleet architecture decisions
+- `CHARTER.md` — Fleet charter and principles
+- `KEEL.md` — Foundational design document
+- `PLATO-FIRST.md` — PLATO integration strategy
 
-This repo is not a library, a service, or a tool you import. It's one agent's home directory — committed for transparency so the fleet can see what's happening on this node.
+### Cross-References
+- `CROSS-POLLINATE.md` — Inter-agent knowledge transfer
+- `CROSS-REFERENCES.md` — Links to related repos and docs
+- `CONTEXT-REFERENCE.md` — Context for new sessions
 
-**What's here:**
-- Incoming/outgoing bottles (inter-agent messages)
-- Agent logs and coordination state
-- Fleet coordination data for CCC agent operations
+## Related
 
-**Note:** ~42MB. This is a workspace dump, not a packaged project. Clone only if you need to inspect what CCC is doing.
+- [sunset-ecosystem](https://github.com/SuperInstance/sunset-ecosystem) — Trinity-architecture agent lifecycle
+- [cocapn-plato](https://github.com/SuperInstance/cocapn-plato) — PLATO knowledge rooms
+- [ccc-os](https://github.com/SuperInstance/ccc-os) — Fleet monitoring
+- [cocapn-health](https://github.com/SuperInstance/cocapn-health) — Fleet health checks
