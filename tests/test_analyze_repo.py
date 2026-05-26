@@ -35,11 +35,11 @@ class TestGetTree(unittest.TestCase):
         self.assertIn("main.py", result)
 
     def test_max_depth(self):
-        deep = self.tmpdir / "a" / "b" / "c" / "d"
+        deep = self.tmpdir / "a" / "b" / "c" / "zzz"
         deep.mkdir(parents=True)
         (deep / "file.txt").write_text("x")
         result = self.get_tree(str(self.tmpdir), max_depth=2)
-        self.assertNotIn("d", result)
+        self.assertNotIn("zzz", result)
 
     def test_ignores_git(self):
         (self.tmpdir / ".git").mkdir()
