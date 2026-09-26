@@ -75,7 +75,7 @@ UNKNOWN (unproven) until seen. Suspicion is the default; trust is a receipt.
 
 ## Tests
 
-291 tests collected across the repo suite (`python3 -m pytest tests/`) — the
+297 tests collected across the repo suite (`python3 -m pytest tests/`) — the
 `fleet_murmur` package is guarded by `tests/test_fleet_murmur.py` (protocol
 behavior) and `tests/test_honesty_pass.py` (receipts discipline). 18 skips are
 infrastructure-dependent integration tests that abstain when services are
