@@ -16,3 +16,4 @@ drifts from the live suite, is build-red.
 | VC07 | Quality-gate refusals leave a REFUSE receipt and never enter the rumor mill | test_quality_gate_refusal_produces_refusal_receipt_not_spread | tests/test_honesty_pass.py |
 | VC08 | README's stated test count equals the live collected count; every registry row names an existing test | test_readme_claims_have_tests_and_counts_match | tests/test_honesty_pass.py |
 | VC09 | Base protocol: dedup, fanout spread, hop counting, peer liveness, convergence detection | suite green | tests/test_fleet_murmur.py |
+| VC10 | The quality-gate-stream adapter is written against the live qgs API and pinned by real-package runs: empty payloads refused, passing rumors enter the mill, absence returns None never faked, the seam names SuperInstance/quality-gate-stream | tests/test_qgs_adapter_glue.py (4 live pins run the real package; abstain as skips when uninstalled) | tests/test_qgs_adapter_glue.py |
