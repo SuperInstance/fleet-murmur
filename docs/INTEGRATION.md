@@ -7,11 +7,11 @@ fleet-murmur is the **meta-coordination workspace** and cross-pollination hub fo
 ## What Lives Here
 
 - **CROSS-POLLINATE.md** — Protocol requiring every fleet repo to reference at least 2 other repos via `<!-- x-ref -->` meta-headers
-- **docs-cross-plane-protocol.json** — Low-level agent communication schema (agent ID, timestamp, monitor/navigate opcodes)
+- **cross-plane-protocol.json** — Low-level agent communication schema (agent ID, timestamp, monitor/navigate opcodes)
 - **SOUL.md** — Shared personality baseline for agent instances operating across the fleet
 - **Tile buffers** (`tile_buffers/`) — Serialized knowledge tiles (JSON) from live fleet sessions, including `test-evolve` and `test-curriculum` runs
 - **Fleet status docs** — `FLEET-STATUS.md`, `HEARTBEAT.md`, `MEMORY.md`, `ARCHITECTURE.md`
-- **Research artifacts** — Papers, diagrams, and documentation drafts (`docs-*.md`)
+- **Research artifacts** — Papers, diagrams, and documentation drafts (`docs/*.md` (the `docs-` prefix was the old flat-root convention))
 
 ## SuperInstance Integration Points
 
@@ -29,7 +29,7 @@ fleet-murmur is the **meta-coordination workspace** and cross-pollination hub fo
   - **plato-adapters** — `AdapterRegistry` can register `tile_buffer_loader` adapters
 - Tile format is compatible with LucidDreamer's `DialMixin` (confidence, dial_position fields)
 
-### 3. docs-cross-plane-protocol.json — Agent Communication Schema
+### 3. cross-plane-protocol.json — Agent Communication Schema
 - Defines the low-level wire format for inter-agent messages:
   - `agent`: role identifier (e.g., `comms-engineer`)
   - `timestamp`: ISO-8601
@@ -44,7 +44,7 @@ fleet-murmur is the **meta-coordination workspace** and cross-pollination hub fo
 - **Integration with si-runtime-python:** `Fleet.fleet_health()` can consume heartbeat state to compute fleet-wide health scores
 
 ### 5. Research Artifacts — Constraint Theory & Lock Algebra
-- `docs-paper-lock-algebra.md` and `docs-lock-algebra-synthesis.md` formalize the mathematical foundations of SuperInstance's constraint systems
+- `paper-lock-algebra.md` and `lock-algebra-synthesis.md` formalize the mathematical foundations of SuperInstance's constraint systems
 - **Integration with constraint-dynamics-rs:** The lock-algebra operators map to `Constraint` predicates (e.g., `lock(x) ∧ key(y) → open(x, y)`)
 - **Integration with creative-engine-rust:** Lock-algebra entropy measures inform `QualityMetrics.coherence` calculations
 

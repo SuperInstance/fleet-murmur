@@ -1,6 +1,12 @@
 import time
+import sys
+from pathlib import Path
 
 import pytest
+
+# quartermaster_gc moved to coord/ in the 2026-09-28 reorg; the suite
+# keeps importing it by its package name via the path insert below.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "coord"))
 
 from quartermaster_gc import GCSchedule, RetentionPolicy, TileGC
 
