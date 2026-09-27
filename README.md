@@ -73,11 +73,32 @@ print(ledger.trial_balance())     # attempted == confirmed + ... ?
 Note: only ALIVE/SUSPECT peers are gossiped to — a fresh `Peer` defaults to
 UNKNOWN (unproven) until seen. Suspicion is the default; trust is a receipt.
 
+## Sealing the workspace's own state
+
+The product is a receipt ledger; the workspace's own append-only state files
+(`HEARTBEAT.md`, `STATUS.md`, `FLEET-STATUS.md`, `memory/JOURNAL.md`,
+`data/archivist/` snapshots) used to live outside it. `tools/murmur_seal.py`
+applies the medicine at home:
+
+```bash
+python tools/murmur_seal.py seal HEARTBEAT.md    # identity (sha256+bytes+lines) -> chain
+python tools/murmur_seal.py diff STATUS.md      # MATCHES / CHANGED / UNSEALED
+python tools/murmur_seal.py verify              # replay state/ledger/murmur-seal.jsonl
+```
+
+Seals record identity, never content — sealing never leaks what it vouches
+for. Re-sealing identical bytes is a no-op (chains are for transitions, not
+polls). Sealed paths are relative (cwd first, ledger dir as fallback) so a
+chain replays on any node, the way gossip receipts travel.
+
 ## Tests
 
-297 tests collected across the repo suite (`python3 -m pytest tests/`) — the
+308 tests collected across the repo suite (`python3 -m pytest tests/`) — the
 `fleet_murmur` package is guarded by `tests/test_fleet_murmur.py` (protocol
-behavior) and `tests/test_honesty_pass.py` (receipts discipline). 18 skips are
+behavior) and `tests/test_honesty_pass.py` (receipts discipline), and the
+self-seal tool by `tests/test_murmur_seal.py` (11 pins: chain verify, no-op
+idempotence, relative paths, diff states, tamper detection, CLI roundtrip).
+18 skips are
 infrastructure-dependent integration tests that abstain when services are
 unavailable (CI-safe; the abstention is honest, not silent).
 
