@@ -119,3 +119,9 @@ the live runtime spine, and runtime state directories).
 | `training-data` | `labs/` |
 | `viewscreen-i2i.png` | `assets/` |
 | `wp_backup` | `labs/` |
+
+**Gitlink caveat:** eleven entries (e.g. `coord/captains-log`, `coord/capitaine-ai-pages`,
+`labs/flux-compiler`, `docs/research`) are embedded-repo gitlinks inherited from the old
+flat root — pointers with no `.gitmodules` URL. A fresh clone materializes them as empty
+directories; the content lives in the operator's worktrees. They are mapped here for
+completeness, and the integrity pin checks the directory, not the content.

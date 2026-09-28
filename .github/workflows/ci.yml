@@ -24,8 +24,8 @@ jobs:
         working-directory: /tmp
       - name: Test (the merge gate)
         run: python -m pytest --tb=short -q
-      - name: Seal CLI smoke (idempotent seal · diff · verify)
+      - name: Seal CLI smoke (seal a file · diff it · verify the chain)
         run: |
-          python tools/murmur_seal.py seal
-          python tools/murmur_seal.py diff
+          python tools/murmur_seal.py seal README.md
+          python tools/murmur_seal.py diff README.md
           python tools/murmur_seal.py verify
