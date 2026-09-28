@@ -42,3 +42,4 @@ data/agent-api.log
 data/archivist/
 data/crab-trap/
 data/zeroclaw/
+.pytest_cache/
