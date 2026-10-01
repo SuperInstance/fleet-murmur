@@ -10,7 +10,10 @@ goes standards-track. This pin keeps the ledger doc honest:
    citation that mints the pq -> fm referral edge under the weight law
    (edge weight = specificity x verification);
 4. its corpus table names every refusal kind present on pong-quilt main
-   at the pin (six kinds, site + round provenance each);
+   at the pin (six live kinds at d51631e/R67, site + round provenance each),
+   and names the superseded kind (SAVE/COEV-UNSTABLE, R64–R66 era) with its
+   lifecycle recorded — refusals are era-stamped receipts, a named refusal
+   has a natural lifecycle (R67 PLAYLOG d(honesty)/d(refusals));
 5. it records the honest gap: the draft's completeness invariant is named
    and marked NOT met (no ATTEMPT pairing, no transparency service) — the
    anti-Goodhart bar, a ledger that only claims what it clears.
@@ -30,18 +33,28 @@ DRAFT_NAME = "draft-kamimura-scitt-refusal-events-03"
 AUTHOR = "Kamimura"
 ABSTRACT_SHA = "b835f6633aac9d5e5c3ac5be84a5f05adc411c193edf0ed2a2d382214ff87a32"
 PQ_PIN = "SuperInstance/pong-quilt"
-MAIN_MERGE = "52b42b4"
+MAIN_MERGE = "d51631e"
 
-# The six named refusal / negative-outcome receipt kinds on pong-quilt main
-# at pin 52b42b4 (R65 head), each verified present-tense in the pin commit.
+# The named refusal / negative-outcome receipt kinds on pong-quilt main
+# at pin d51631e (playtest-round-67 head, 2026-10-01), each verified
+# present-tense in the pin commit. SAVE/COEV-EMPTY and LOAD/COEV-MALFORMED
+# arrived with R67's coev-quilt writer; SAVE/COEV-UNSTABLE is the R64–R66
+# name, superseded by the writer (it survives only as SAVE/COEV-EMPTY for
+# the empty C1 state) — the corpus pins the supersession by name.
 REFUSAL_KINDS = [
-    "SAVE/COEV-UNSTABLE",   # index.html:395  — R64 (R59 design): coev save would write the franken-quilt
+    "SAVE/COEV-EMPTY",        # index.html:396 — R67: empty C1 state, nothing to keep yet (supersedes SAVE/COEV-UNSTABLE)
+    "LOAD/COEV-MALFORMED",    # index.html:425 — R67: coev-shaped file missing load-bearing fields, zero state change
     "QA-REFUSAL",           # index.html:248,253 — R12: advice channel silent, exhaustion receipted
     "byo-qpam-fallback",    # index.html:247 — R16: BYO QPAM failure degrades to labeled sim, named
-    "WAL-EXPORT/REFUSED",   # index.html:413 — R30: WAL self-verify non-ok, no file saved
+    "WAL-EXPORT/REFUSED",   # index.html:416 — R30: WAL self-verify non-ok, no file saved
     "SEAL/REFUSED",         # tools/prerun.js:144,152,203; tools/wal-session.js:185 — stone seal verify failed
-    "WAL-EXPORT/EMPTY",     # index.html:419 — R30: genesis-only export, receipted degenerate case
+    "WAL-EXPORT/EMPTY",     # index.html:422 — R30: genesis-only export, receipted degenerate case
 ]
+
+# The R64–R66 era name, retired by R67's coev writer: pinned here so the
+# corpus can never silently drop the supersession (the anti-Goodhart bar
+# cuts both ways — no silent weakening of pins, no silent erasure of history).
+SUPERSEDED_KIND = "SAVE/COEV-UNSTABLE"
 
 
 def _text():
@@ -73,12 +86,24 @@ def test_pong_quilt_cited_by_name_at_main_pin():
     assert MAIN_MERGE in text, "ledger must pin the pong-quilt main merge sha it audited"
 
 
-def test_corpus_names_all_six_refusal_kinds():
+def test_corpus_names_all_refusal_kinds_at_pin():
     text = _text()
     missing = [kind for kind in REFUSAL_KINDS if kind not in text]
     assert not missing, (
         f"corpus dropped refusal kinds present on main at the pin: {missing} — "
         "either restore them or re-audit main and update the pin commit"
+    )
+
+
+def test_superseded_kind_lifecycle_recorded():
+    text = _text()
+    assert SUPERSEDED_KIND in text, (
+        f"the superseded kind {SUPERSEDED_KIND} vanished from the corpus — "
+        "refusals are era-stamped receipts; the R67 supersession must stay "
+        "named (no silent erasure of pin history)"
+    )
+    assert "SAVE/COEV-EMPTY" in text, (
+        "the supersession must name the successor kind SAVE/COEV-EMPTY"
     )
 
 

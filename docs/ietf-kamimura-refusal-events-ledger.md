@@ -2,7 +2,8 @@
 
 Status: design receipt. Source VERIFIED against the datatracker extraction;
 fleet corpus VERIFIED present-tense against **SuperInstance/pong-quilt** main
-merge `52b42b4` (playtest-round-65 head, 2026-09-30). Companion to
+merge `d51631e` (playtest-round-67 head, 2026-10-01; supersedes the `52b42b4`
+/R65 pin of the first version — see *Corpus lifecycle* below). Companion to
 `ietf-sahu-receipts-interop-receipt.md`; same shape, same law:
 **edge weight = specificity × verification.**
 
@@ -50,19 +51,36 @@ evidence pack (draft Appendix D shape).
 - Privacy (§8): digests not payloads, pseudonymous actors, refusal-reason
   must not quote the prompt.
 
-## The fleet corpus (SuperInstance/pong-quilt, main `52b42b4`)
+## The fleet corpus (SuperInstance/pong-quilt, main `d51631e`)
 
-Six named refusal / negative-outcome receipt kinds, verified present-tense in
-the pin commit:
+Six live named refusal / negative-outcome receipt kinds, verified
+present-tense in the pin commit, plus one superseded kind whose lifecycle
+is recorded below:
 
-| kind | site (main @52b42b4) | round | refusal-reason, named | prompt content? |
+| kind | site (main @d51631e) | round | refusal-reason, named | prompt content? |
 |---|---|---|---|---|
-| `SAVE/COEV-UNSTABLE` | index.html:395 | R64 (R59 design relanded) | coev-mode SAVE would write the franken-quilt (coev gen/champ over classic pop, mixed lineage) — refused named until a coev-quilt writer exists; guard keys on the mode banner | none |
+| `SAVE/COEV-EMPTY` | index.html:396 | R67 | empty C1 state — nothing to keep yet, "Train first"; the R64 refusal survives only for this state | none |
+| `LOAD/COEV-MALFORMED` | index.html:425 | R67 | a coev-shaped file missing its load-bearing fields — named refusal, zero state change | none |
 | `QA-REFUSAL` | index.html:248,253 | R12 | advice channel silent — sim pot under the shots floor, or a real QPAM backend's underflow; exhaustion is receipted, never dropped silently | none |
 | `byo-qpam-fallback` | index.html:247 | R16 | BYO QPAM endpoint failure (JEV-invalid payload, fetch failure, no endpoint) — degrades to the labeled sim at same seed/pot, advice NAMED qa-sim, never laundered as byo-qpam | none |
-| `WAL-EXPORT/REFUSED` | index.html:413 | R30 | WAL export self-verification verdict non-ok — refusal receipt, no file saved | none |
+| `WAL-EXPORT/REFUSED` | index.html:416 | R30 | WAL export self-verification verdict non-ok — refusal receipt, no file saved | none |
 | `SEAL/REFUSED` | tools/prerun.js:144,152,203; tools/wal-session.js:185 | R37-era coev prerun | stone seal chain fails mirror/canonical/live verify — refusal path, exit 1, no checkpoint file | none |
-| `WAL-EXPORT/EMPTY` | index.html:419 | R30 | empty receipt panel exports a genesis-only chain — receipted degenerate case, not a refusal but a named negative outcome kept for invariant accounting | none |
+| `WAL-EXPORT/EMPTY` | index.html:422 | R30 | empty receipt panel exports a genesis-only chain — receipted degenerate case, not a refusal but a named negative outcome kept for invariant accounting | none |
+
+### Corpus lifecycle — refusals are era-stamped receipts
+
+`SAVE/COEV-UNSTABLE` (R64–R66, pinned at index.html:395 under `52b42b4`)
+was correct for three rounds: coev-mode SAVE would have written the
+franken-quilt (coev gen/champ over classic pop, mixed lineage), so the save
+was refused named. R67's coev-quilt writer made the franken class impossible
+by construction — the coev banner now WRITES a one-lane file with no classic
+field able to disagree with the weights — and the refusal's job moved from
+"stop the lie" to "name the empty state": the same site now receipts
+`SAVE/COEV-EMPTY` when there is nothing to keep. The R64 name is retired,
+not erased: pong-quilt's own pins disclose the supersession in both
+directions (the updated r64 pin asserts the surviving empty-state refusal
+AND the writer's truth). A named refusal has a natural lifecycle; a ledger
+that only appends without retiring is itself a mild Goodhart surface.
 
 ## Mapping to the draft — what clears, what does not
 
@@ -72,7 +90,9 @@ the pin commit:
   named `refusal-reason` and zero prompt/request content. pong-quilt's receipt
   culture (hashes, named kinds, no payloads) is already §8.1-shaped.
 - *refusal-reason named and human-readable.* Each kind's reason string names
-  the wound and its round lineage — no silent drops anywhere in the corpus.
+  the wound and its round lineage — no silent drops anywhere in the corpus;
+  lifecycle transitions (SAVE/COEV-UNSTABLE → SAVE/COEV-EMPTY) are disclosed
+  at the pin sites, not smoothed over.
 - *Issuer identifiable.* Every receipt row is issued by the page/tooling under
   the SuperInstance/pong-quilt repo identity; round provenance (R12/R16/R30/
   R59/R64) is the informal correlation anchor.

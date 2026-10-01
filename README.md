@@ -15,7 +15,7 @@ producer                RumorMill                peers
                      + unconfirmed + refused + dropped
 ```
 
-One package (`fleet_murmur/`), zero required dependencies, 315 tests.
+One package (`fleet_murmur/`), zero required dependencies, 316 tests.
 
 ## Why receipts
 
@@ -58,7 +58,7 @@ moth-ledger trial balance, quality-gate-stream's scoring integrity):
 ```bash
 git clone https://github.com/SuperInstance/fleet-murmur.git && cd fleet-murmur
 pip install -e .          # optional; the suite also runs from a bare clone
-python -m pytest -q       # 315 tests; 22 skips are env-gated live pins
+python -m pytest -q       # 316 tests; 22 skips are env-gated live pins
 ```
 
 Sixty seconds, fully receipted, no infrastructure:
@@ -131,7 +131,7 @@ exists alongside the WAL work in quilt-stone and wal-export.
 
 ## Current state — and what that means
 
-- **315 tests green** (3.10/3.11/3.12 matrix in CI), **22 skips** — every
+- **316 tests green** (3.10/3.11/3.12 matrix in CI), **22 skips** — every
   skip is an env-gated live pin that abstains rather than fakes green
   (e.g. quality-gate-stream not installed). A skip says "not measured
   here," never "assumed fine."
